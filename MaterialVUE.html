@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<title>MaterialVUE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<style>
+:root {
+  color-scheme: light dark;
+  --md-sys-color-primary: #6750A4; --md-sys-color-on-primary: #fff;
+  --md-sys-color-primary-container: #EADDFF; --md-sys-color-on-primary-container: #21005D;
+  --md-sys-color-secondary: #625B71; --md-sys-color-on-secondary: #fff;
+  --md-sys-color-secondary-container: #E8DEF8; --md-sys-color-on-secondary-container: #1D192B;
+  --md-sys-color-tertiary-container: #FFD8E4; --md-sys-color-on-tertiary-container: #31111D;
+  --md-sys-color-error: #B3261E; --md-sys-color-error-container: #F9DEDC; --md-sys-color-on-error-container: #410E0B;
+  --md-sys-color-surface: #FEF7FF; --md-sys-color-on-surface: #1D1B20; --md-sys-color-on-surface-variant: #49454F;
+  --md-sys-color-surface-container: #F3EDF7; --md-sys-color-surface-container-high: #ECE6F0;
+  --md-sys-color-surface-container-highest: #E6E0E9;
+  --md-sys-color-outline: #79747E; --md-sys-color-outline-variant: #CAC4D0;
+  --md-ref-typeface-brand: Roboto; --md-ref-typeface-plain: Roboto;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-sys-color-primary: #D0BCFF; --md-sys-color-on-primary: #381E72;
+    --md-sys-color-primary-container: #4F378B; --md-sys-color-on-primary-container: #EADDFF;
+    --md-sys-color-secondary: #CCC2DC; --md-sys-color-on-secondary: #332D41;
+    --md-sys-color-secondary-container: #4A4458; --md-sys-color-on-secondary-container: #E8DEF8;
+    --md-sys-color-tertiary-container: #633B48; --md-sys-color-on-tertiary-container: #FFD8E4;
+    --md-sys-color-error: #F2B8B5; --md-sys-color-error-container: #8C1D18; --md-sys-color-on-error-container: #F9DEDC;
+    --md-sys-color-surface: #141218; --md-sys-color-on-surface: #E6E0E9; --md-sys-color-on-surface-variant: #CAC4D0;
+    --md-sys-color-surface-container: #211F26; --md-sys-color-surface-container-high: #2B2930;
+    --md-sys-color-surface-container-highest: #36343B;
+    --md-sys-color-outline: #938F99; --md-sys-color-outline-variant: #49454F;
+  }
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Roboto, system-ui, sans-serif; background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); }
+.muted { color: var(--md-sys-color-on-surface-variant); }
+
+/* login */
+#login { min-height: 100dvh; display: grid; place-items: center; padding: 16px; }
+#form { width: min(440px, 100%); background: var(--md-sys-color-surface-container); border-radius: 28px; padding: 32px; display: flex; flex-direction: column; gap: 16px; }
+#form h1 { margin: 0; font-size: 32px; font-weight: 500; }
+#form p { margin: 0 0 8px; font-size: 14px; }
+#form md-filled-text-field { width: 100%; }
+#err { color: var(--md-sys-color-error); font-size: 14px; }
+#signin { align-self: flex-end; }
+
+/* app shell */
+#app { display: grid; grid-template-columns: 300px 1fr; min-height: 100dvh; }
+nav { background: var(--md-sys-color-surface-container); padding: 24px 12px; display: flex; flex-direction: column; gap: 8px; position: sticky; top: 0; height: 100dvh; }
+.brand { font-size: 22px; font-weight: 500; padding: 0 16px; color: var(--md-sys-color-primary); }
+.who { padding: 8px 16px 16px; font-size: 14px; }
+.who b { display: block; font-weight: 500; color: var(--md-sys-color-on-surface); }
+.nav-item { position: relative; display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; border: 0; border-radius: 28px; background: none; color: var(--md-sys-color-on-surface-variant); font: 500 14px Roboto, sans-serif; cursor: pointer; text-align: left; }
+.nav-item.selected { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.spacer { flex: 1; }
+main { padding: 24px 32px 48px; min-width: 0; }
+.top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+.top h2 { margin: 0; font-size: 32px; font-weight: 400; flex: 1; }
+#periods md-outlined-select { min-width: 200px; }
+#bar { position: fixed; top: 0; left: 0; right: 0; z-index: 5; }
+
+/* gradebook */
+#content { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; align-items: start; }
+.msg { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 24px; border-radius: 24px; background: var(--md-sys-color-surface-container); }
+.course { background: var(--md-sys-color-surface-container); border-radius: 24px; overflow: hidden; }
+.course-head { position: relative; width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; align-items: center; padding: 20px; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.course-head .meta { grid-column: 1 / -1; }
+.course-title { font-size: 20px; font-weight: 500; line-height: 1.25; }
+.course-sub { font-size: 14px; margin-top: 4px; color: var(--md-sys-color-on-surface-variant); }
+.chips { display: flex; gap: 8px; margin-bottom: 8px; }
+.chip { font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 8px; background: var(--md-sys-color-surface-container-highest); }
+.chip.new { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.badge { width: 72px; height: 72px; border-radius: 24px; display: grid; place-content: center; text-align: center; font-size: 28px; font-weight: 500; line-height: 1; }
+.badge.long { font-size: 16px; }
+.badge small { display: block; margin-top: 4px; font-size: 12px; font-weight: 400; }
+.g-a { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+.g-b { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.g-c { background: var(--md-sys-color-tertiary-container); color: var(--md-sys-color-on-tertiary-container); }
+.g-d { background: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
+.g-n { background: var(--md-sys-color-surface-container-highest); }
+md-linear-progress { width: 100%; --md-linear-progress-track-shape: 4px; --md-linear-progress-active-indicator-height: 6px; --md-linear-progress-track-height: 6px; }
+.assign { border-top: 1px solid var(--md-sys-color-outline-variant); }
+.row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 20px; }
+.row + .row { border-top: 1px solid var(--md-sys-color-outline-variant); }
+.row-name { font-size: 15px; font-weight: 500; overflow-wrap: anywhere; }
+.row-sub { font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-top: 2px; overflow-wrap: anywhere; }
+.row-score { text-align: right; font-weight: 500; white-space: nowrap; }
+
+#content.list { grid-template-columns: 1fr; max-width: 900px; gap: 8px; }
+.mrow, .raw { background: var(--md-sys-color-surface-container); border-radius: 16px; overflow: hidden; }
+.mrow summary, .raw summary { display: flex; align-items: center; gap: 16px; padding: 14px 20px; cursor: pointer; list-style: none; }
+.mrow summary::-webkit-details-marker, .raw summary::-webkit-details-marker { display: none; }
+.raw summary { font-size: 13px; color: var(--md-sys-color-on-surface-variant); }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.unread .dot { background: var(--md-sys-color-primary); }
+.unread .row-name { font-weight: 700; }
+.mmain { flex: 1; min-width: 0; }
+.mmain .row-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+pre { margin: 0; padding: 12px 20px; overflow: auto; max-height: 320px; font-size: 12px; background: var(--md-sys-color-surface-container-highest); }
+.count { margin-left: auto; min-width: 22px; padding: 2px 8px; border-radius: 11px; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-size: 12px; text-align: center; }
+
+.mbody { padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
+.mhead .row-name, .unread .mhead .row-name { font-size: 18px; font-weight: 500; }
+.mtext { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; line-height: 1.55; }
+.mtext a { color: var(--md-sys-color-primary); }
+.mbody .raw { background: var(--md-sys-color-surface-container-high); border-radius: 12px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+@media (max-width: 839px) {
+  #app { grid-template-columns: 1fr; }
+  nav { position: static; height: auto; flex-direction: row; align-items: center; padding: 12px; overflow-x: auto; }
+  .brand, .who, .spacer { display: none; }
+  .nav-item { height: 48px; }
+  main { padding: 16px 16px 48px; }
+  #content { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<section id="login" hidden>
+  <form id="form" novalidate>
+    <h1>MaterialVUE</h1>
+    <p class="muted">Sign in with your StudentVUE account.</p>
+    <md-filled-text-field id="url" label="StudentVUE URL" type="url" placeholder="studentvue.yourdistrict.org" autocomplete="url" required></md-filled-text-field>
+    <md-filled-text-field id="user" label="Username" autocomplete="username" required></md-filled-text-field>
+    <md-filled-text-field id="pass" label="Password" type="password" autocomplete="current-password" required></md-filled-text-field>
+    <div id="zipwrap" hidden>
+      <md-filled-text-field id="zip" label="District ZIP code" inputmode="numeric" maxlength="5"></md-filled-text-field>
+    </div>
+    <div id="err" role="alert" hidden></div>
+    <md-filled-button id="signin" type="submit">Sign in</md-filled-button>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <nav>
+    <div class="brand">MaterialVUE</div>
+    <div class="who muted"><b id="student"></b><span id="school"></span></div>
+    <button class="nav-item selected" data-tool="gradebook"><md-ripple></md-ripple><md-icon>grading</md-icon>Gradebook</button>
+    <button class="nav-item" data-tool="messages"><md-ripple></md-ripple><md-icon>mail</md-icon>Messages<span class="count" id="unread" hidden></span></button>
+    <div class="spacer"></div>
+    <button class="nav-item" id="signout"><md-ripple></md-ripple><md-icon>logout</md-icon>Sign out</button>
+  </nav>
+  <main>
+    <md-linear-progress id="bar" indeterminate hidden></md-linear-progress>
+    <div class="top">
+      <h2 id="title">Gradebook</h2>
+      <div id="periods"></div>
+      <md-icon-button id="refresh" aria-label="Refresh"><md-icon>refresh</md-icon></md-icon-button>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+
+<script type="module" nonce="{{NONCE}}">
+import 'https://esm.run/@material/web@2.3.0/all.js';
+
+const $ = (s) => document.querySelector(s);
+// Builds DOM with textContent only, so server data can never inject HTML.
+const h = (tag, props = {}, ...kids) => {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (k === 'class') el.className = v;
+    else if (k in el) el[k] = v;
+    else el.setAttribute(k, v);
+  }
+  el.append(...kids.flat().filter((x) => x != null && x !== false));
+  return el;
+};
+
+let sid = sessionStorage.getItem('mv_sid'); // shortcut: sessionStorage survives refresh, dies with the tab
+const show = (which) => { $('#login').hidden = which !== 'login'; $('#app').hidden = which !== 'app'; };
+const loginErr = (m) => { $('#err').textContent = m || ''; $('#err').hidden = !m; };
+
+async function api(path, body) {
+  const r = await fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(sid && { Authorization: 'Bearer ' + sid }) },
+    body: JSON.stringify(body || {}),
+  });
+  const j = await r.json().catch(() => ({ error: 'Bad response from server' }));
+  if (r.status === 401 && sid) { signOut('Session expired. Please sign in again.'); throw new Error('expired'); }
+  if (!r.ok) throw new Error(j.error || 'Request failed');
+  return j;
+}
+
+// StudentVUE answers HTTP 200 even on failure; the real error is in the envelope.
+async function sv(method, inner) {
+  const j = await api('/api/' + method, inner);
+  if (j.error) { const e = new Error(j.error.message || 'StudentVUE error'); e.code = String(j.error.code); throw e; }
+  return j.data;
+}
+
+async function signOut(msg) {
+  const old = sid;
+  sid = null;
+  sessionStorage.removeItem('mv_sid');
+  if (old) fetch('/logout', { method: 'POST', headers: { Authorization: 'Bearer ' + old } }).catch(() => {});
+  show('login');
+  loginErr(msg);
+}
+
+$('#form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  let district;
+  try {
+    const raw = $('#url').value.trim();
+    district = new URL(raw.includes('://') ? raw : 'https://' + raw).hostname.toLowerCase();
+  } catch { return loginErr('Enter a valid StudentVUE URL.'); }
+  const body = { district, username: $('#user').value.trim(), password: $('#pass').value };
+  if (!body.username || !body.password) return loginErr('Enter your username and password.');
+  const zipShown = !$('#zipwrap').hidden;
+  if (zipShown) body.zip = $('#zip').value.trim();
+  $('#signin').disabled = true;
+  loginErr('');
+  try {
+    sid = null;
+    const j = await api('/login', body);
+    sid = j.session;
+    sessionStorage.setItem('mv_sid', sid);
+    $('#pass').value = '';
+    enter();
+  } catch (err) {
+    if (err.message === 'unknown district') {
+      $('#zipwrap').hidden = false;
+      loginErr(zipShown ? "Couldn't verify this district with that ZIP code." : 'This district uses a custom domain. Enter its ZIP code once so the server can verify it.');
+    } else {
+      loginErr(err.message === 'login failed' ? 'Login failed. Check your URL, username and password.' : err.message);
+    }
+  } finally { $('#signin').disabled = false; }
+});
+
+$('#signout').addEventListener('click', () => signOut(''));
+let tool = 'gradebook';
+const reload = () => (tool === 'messages' ? loadMessages(0) : loadGradebook($('#periods md-outlined-select')?.value ?? ''));
+function openTool(t) {
+  tool = t;
+  document.querySelectorAll('.nav-item[data-tool]').forEach((b) => b.classList.toggle('selected', b.dataset.tool === t));
+  $('#title').textContent = t === 'messages' ? 'Messages' : 'Gradebook';
+  $('#content').className = t === 'messages' ? 'list' : '';
+  $('#periods').replaceChildren();
+  reload();
+}
+document.querySelectorAll('.nav-item[data-tool]').forEach((b) => b.addEventListener('click', () => openTool(b.dataset.tool)));
+$('#refresh').addEventListener('click', reload);
+
+function enter() {
+  show('app');
+  sv('GetChildListData', { legacyAppRequest: false, secondaryLogin: false })
+    .then((d) => {
+      const c = d?.children?.childInfos?.[0];
+      if (c) { $('#student').textContent = c.name || ''; $('#school').textContent = c.schoolName || ''; }
+    }).catch(() => {});
+  sv('GetSynergyMailUnreadCount', {}).then((d) => setUnread(d?.messageCount)).catch(() => {});
+  openTool('gradebook');
+}
+
+/* ---------- gradebook ---------- */
+// Assignment field names are undocumented for this API, so try likely names and fall back gracefully.
+const pick = (o, keys) => { for (const k of keys) if (o[k] != null && o[k] !== '' && typeof o[k] !== 'object') return o[k]; return null; };
+const NAME = ['measure', 'name', 'assignmentName', 'title', 'gradebookName'];
+const TYPE = ['type', 'category', 'assignmentType'];
+const DATE = ['date', 'dueDate', 'startDate'];
+const SCORE = ['displayScore', 'score', 'pointsEarned', 'earnedPoints'];
+const PTS = ['points', 'maxPoints', 'possiblePoints'];
+const NOTES = ['notes', 'description'];
+const toTime = (s) => { const m = /(\d+)\/(\d+)\/(\d+)/.exec(s || ''); return m ? new Date(m[3], m[1] - 1, m[2]).getTime() : 0; };
+
+const message = (text, icon = 'info') => $('#content').replaceChildren(h('div', { class: 'msg' }, h('md-icon', {}, icon), text));
+
+async function loadGradebook(period = '') {
+  $('#bar').hidden = false;
+  try {
+    const d = await sv('Gradebook', { reportPeriod: period, concurrentSchOrgYearGU: '', childIntID: 0, languageCode: 'en' });
+    if (tool !== 'gradebook') return;
+    renderGradebook(d.traditionalGradebook, d.standardsGradebook, period);
+  } catch (e) {
+    if (e.message === 'expired') return;
+    message(e.code === '2100' ? "Gradebook isn't available for this school." : e.message, 'error');
+  } finally { $('#bar').hidden = true; }
+}
+
+function renderGradebook(t, standards, requested) {
+  if (!t) {
+    $('#periods').replaceChildren();
+    return message(standards ? "This school uses standards-based grading, which MaterialVUE doesn't support yet." : 'No gradebook data.');
+  }
+  const cur = String(t.reportingPeriod?.index ?? requested);
+  const periods = Array.isArray(t.reportingPeriods) ? t.reportingPeriods : [];
+  $('#periods').replaceChildren(
+    h('md-outlined-select', { label: 'Grading period', onchange: (e) => loadGradebook(e.target.value) },
+      ...periods.map((p) => h('md-select-option', { value: String(p.index), selected: String(p.index) === cur },
+        h('div', { slot: 'headline' }, p.gradePeriod || 'Period ' + p.index)))));
+  const courses = t.courses || [];
+  if (!courses.length) return message('No courses found for this grading period.');
+  $('#content').replaceChildren(...courses.map(courseCard));
+}
+
+function courseCard(c) {
+  const m = c.marks?.[0] || {};
+  const pct = parseFloat(m.calculatedScoreRaw);
+  const label = String(m.calculatedScoreString ?? 'N/A');
+  const tone = isNaN(pct) ? 'g-n' : pct >= 90 ? 'g-a' : pct >= 80 ? 'g-b' : pct >= 70 ? 'g-c' : 'g-d';
+  const items = (m.assignments || []).slice().sort((a, b) => toTime(pick(b, DATE)) - toTime(pick(a, DATE)));
+  const fresh = m.assignmentsSinceLastAccess?.length || 0;
+
+  const list = h('div', { class: 'assign', hidden: true },
+    ...(items.length ? items.map(assignRow) : [h('div', { class: 'row muted' }, 'No assignments yet.')]));
+  const card = h('div', { class: 'course' });
+  const head = h('button', {
+    class: 'course-head', 'aria-expanded': 'false',
+    onclick() { list.hidden = !list.hidden; head.setAttribute('aria-expanded', String(!list.hidden)); },
+  },
+    h('md-ripple'),
+    h('div', {},
+      h('div', { class: 'chips' },
+        c.period ? h('span', { class: 'chip' }, 'Period ' + c.period) : null,
+        fresh ? h('span', { class: 'chip new' }, fresh + ' new') : null),
+      h('div', { class: 'course-title' }, c.title || c.courseName || 'Course'),
+      h('div', { class: 'course-sub' }, [c.staff, c.room && 'Room ' + c.room].filter(Boolean).join(' · '))),
+    h('div', { class: `badge ${tone}${label.length > 3 ? ' long' : ''}` }, label,
+      isNaN(pct) ? null : h('small', {}, pct.toFixed(1) + '%')),
+    h('div', { class: 'meta' }, isNaN(pct) ? null : h('md-linear-progress', { value: Math.min(Math.max(pct, 0), 100) / 100 })));
+  card.append(head, list);
+  return card;
+}
+
+function assignRow(a) {
+  const name = pick(a, NAME) ?? Object.values(a).find((v) => typeof v === 'string') ?? 'Assignment';
+  const score = pick(a, SCORE), pts = pick(a, PTS), notes = pick(a, NOTES);
+  return h('div', { class: 'row' },
+    h('div', {},
+      h('div', { class: 'row-name' }, String(name)),
+      h('div', { class: 'row-sub' }, [pick(a, TYPE), pick(a, DATE)].filter(Boolean).join(' · ')),
+      notes ? h('div', { class: 'row-sub' }, String(notes)) : null),
+    h('div', { class: 'row-score' }, String(score ?? '—'),
+      pts != null && pts !== score ? h('div', { class: 'row-sub' }, String(pts)) : null));
+}
+
+/* ---------- messages (Synergy Mail) ---------- */
+// Read-only on purpose: list + open, nothing that sends, deletes or moves mail.
+// Verified against a live server: GetSynergyMailGetConversations needs childIntID (the API doc omits it; without it the
+// server answers 500). Opening a message is still unverified, so that path tries a few request shapes, remembers the
+// first that works, and every attempt is kept as a diagnostic (shapes and error codes only, no personal data).
+const SUBJ = ['subject', 'subjectLine', 'title'];
+const FROM = ['senderName', 'fromName', 'from', 'sender', 'lastSenderName'];
+const MDATE = ['sendDateTimeFormattedShort', 'date', 'sentDate', 'lastMessageDate', 'dateTime', 'sentDateTime'];
+const PREV = ['preview', 'snippet', 'bodyPreview', 'lastMessage'];
+const GUIDISH = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
+const isUnread = (c) => c.mailRead === false || ['unread', 'isUnread', 'hasUnread', 'unreadCount', 'unreadMessages'].some((k) => c[k] === true || Number(c[k]) > 0);
+const fromName = (c) => pick(c, FROM) ?? c.from?.contactDetails1 ?? c.fromOption?.description ?? null; // names seen in the web portal's GetMessages
+const findList = (v) => (Array.isArray(v) ? v : v && typeof v === 'object' ? Object.values(v).find(Array.isArray) ?? [] : []);
+function setUnread(v) {
+  const n = typeof v === 'object' ? NaN : Number(v);
+  $('#unread').textContent = n; $('#unread').hidden = !(n > 0);
+}
+
+// Same idea as the backend's redact(): keep keys, numbers, booleans; hide every string.
+const shape = (v) => Array.isArray(v) ? (v.length > 2 ? [...v.slice(0, 2).map(shape), `... ${v.length} items`] : v.map(shape))
+  : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, shape(x)]))
+  : typeof v === 'string' && v.length > 4 ? (GUIDISH.test(v) ? '<guid>' : `<str ${v.length}>`) : v;
+
+const attempts = [];
+const diag = (list) => list.map((a) => ({ method: a.method, request: shape(a.request), ok: a.ok, ...(a.ok ? { response: shape(a.data) } : { error: a.error }) }));
+async function tryCall(method, inner) {
+  const rec = { method, request: inner };
+  attempts.push(rec);
+  try { rec.data = await sv(method, inner); rec.ok = true; }
+  catch (e) {
+    // Expiry, transport trouble and "not enabled" end the whole attempt; only server-side rejections move to the next shape.
+    if (e.message === 'expired' || !e.code || e.code === '2100') throw e;
+    rec.ok = false; rec.error = `${e.code}: ${e.message}`;
+  }
+  return rec;
+}
+
+/* inbox */
+const INBOX_SHAPES = [
+  { name: 'verified', base: 0, extra: { childIntID: 0 } },
+  { name: '1-based pages', base: 1, extra: { childIntID: 0 } }, // hedge for servers that page from 1
+];
+let inboxShape = null; // the shape that worked, reused for paging and later reloads
+async function fetchInbox(page) {
+  for (const s of inboxShape ? [inboxShape] : page === 0 ? INBOX_SHAPES : []) {
+    const r = await tryCall('GetSynergyMailGetConversations', { pageToLoad: page + s.base, ...s.extra });
+    if (r.ok) { inboxShape = s; return r.data; }
+  }
+  return null;
+}
+
+async function loadMessages(page = 0) {
+  $('#bar').hidden = false;
+  if (page === 0) attempts.length = 0;
+  try {
+    const d = await fetchInbox(page);
+    if (tool !== 'messages') return;
+    if (!d) {
+      inboxShape = null;
+      if (page > 0) return $('#content').append(h('div', { class: 'msg' }, h('md-icon', {}, 'error'), 'Could not load more messages.'));
+      await tryCall('GetSynergyMailInboxCount', {}); // extra probe: shows whether the mail service answers at all and how it is organised
+      if (tool === 'messages') mailFailure();
+      return;
+    }
+    setUnread(d.totalUnreadConversationMessages);
+    renderMessages(d, page);
+  } catch (e) {
+    if (e.message === 'expired') return;
+    message(e.code === '2100' ? "Synergy Mail isn't available for this school." : e.message, 'error');
+  } finally { $('#bar').hidden = true; }
+}
+
+function mailFailure() {
+  const text = JSON.stringify({ attempts: diag(attempts) }, null, 2);
+  const copy = async (e) => { try { await navigator.clipboard.writeText(text); e.target.textContent = 'Copied'; } catch { e.target.textContent = 'Copy failed, select the text below'; } };
+  $('#content').replaceChildren(
+    h('div', { class: 'msg' }, h('md-icon', {}, 'error'),
+      h('div', {},
+        h('div', { class: 'row-name' }, 'The mail server refused every inbox request I tried.'),
+        h('div', { class: 'row-sub' }, 'The mail service itself is reachable (the unread counter works), so the inbox call probably needs a field this client does not know yet. The diagnostics below contain no personal data.'))),
+    h('div', { class: 'actions' },
+      h('md-filled-tonal-button', { onclick: copy }, 'Copy diagnostics'),
+      h('md-outlined-button', { onclick: () => loadMessages(0) }, 'Try again')),
+    h('details', { class: 'raw', open: true }, h('summary', {}, 'Diagnostics (safe to share)'), h('pre', {}, text)));
+}
+
+// Empty inbox but mail exists elsewhere: ask the mail service how it is organised (counts/folders) and show it.
+async function probeMailbox() {
+  const start = attempts.length;
+  let ok = null;
+  try {
+    for (const req of [{ childIntID: 0 }, {}]) {
+      const r = await tryCall('GetSynergyMailInboxCount', req);
+      if (r.ok) { ok = r.data; break; }
+    }
+  } catch (e) { if (e.message === 'expired') return; }
+  const box = $('#content');
+  if (tool !== 'messages' || !box.querySelector('.msg')) return;
+  box.append(
+    h('details', { class: 'raw', open: true }, h('summary', {}, 'Mailbox diagnostics (safe to share)'),
+      h('pre', {}, JSON.stringify(diag(attempts.slice(start)), null, 2))),
+    ok ? h('details', { class: 'raw' }, h('summary', {}, 'Mailbox raw data (may contain folder names)'),
+      h('pre', {}, JSON.stringify(ok, null, 2).slice(0, 30000))) : null);
+}
+
+function renderMessages(d, page) {
+  const items = findList(d.conversations ?? d), box = $('#content');
+  if (page === 0) box.replaceChildren(h('details', { class: 'raw' },
+    h('summary', {}, 'Raw response (contains personal info; redact before sharing)'),
+    h('pre', {}, JSON.stringify(d, null, 2).slice(0, 30000))));
+  box.querySelector('.more')?.remove();
+  if (page === 0 && !items.length) {
+    box.append(h('div', { class: 'msg' }, h('md-icon', {}, 'inbox'),
+      h('div', {},
+        h('div', { class: 'row-name' }, 'The server returned no conversations (0 unread).'),
+        h('div', { class: 'row-sub' }, 'If the web portal shows older mail, this request is probably filtered (unread only, a different folder, or a date window). The mailbox diagnostics below show how the server organises it.'))));
+    probeMailbox();
+  }
+  box.append(...items.map(mailRow));
+  if (d.isLastPageLoaded === false) box.append(h('md-outlined-button', { class: 'more', onclick: () => loadMessages(page + 1) }, 'Load more'));
+}
+
+/* reading a message */
+function strings(v, path = '', out = []) {
+  if (typeof v === 'string') out.push([path, v]);
+  else if (Array.isArray(v)) v.forEach((x, i) => strings(x, `${path}[${i}]`, out));
+  else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) strings(x, path ? `${path}.${k}` : k, out);
+  return out;
+}
+const lastKey = (p) => p.split('.').pop().replace(/\[\d+\]$/, '');
+const BODYKEY = /body|content|text|html|message/i, NOTBODY = /subject|title|name|date|time|sender|recipient|from|^(to|cc|bcc)$/i, IDKEY = /(gu|id)$/i;
+
+// Message HTML is parsed with DOMParser (inert: no script runs, nothing loads) and only its text is kept.
+function toText(s) {
+  let t = String(s);
+  for (let i = 0; i < 2 && /<[a-z!/][^>]*>/i.test(t); i++) {
+    t = t.replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|div|li|tr|h[1-6]|blockquote)>/gi, '\n');
+    const doc = new DOMParser().parseFromString(t, 'text/html');
+    doc.querySelectorAll('script,style').forEach((n) => n.remove());
+    t = doc.body.textContent;
+  }
+  return t.replace(/\r\n?/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+function fromXml(s) { // some mail fields are real XML strings whose text lives in an attribute
+  const doc = new DOMParser().parseFromString(s, 'text/xml');
+  if (doc.querySelector('parsererror')) return '';
+  const vals = [];
+  doc.querySelectorAll('*').forEach((n) => { if (!n.children.length) vals.push(n.textContent); for (const a of n.attributes) vals.push(a.value); });
+  return vals.sort((a, b) => b.length - a.length)[0] || '';
+}
+function bodyText(data) {
+  const cands = strings(data).filter(([p, s]) => s.trim() && !GUIDISH.test(s.trim()) && !IDKEY.test(lastKey(p)) && !NOTBODY.test(lastKey(p)));
+  const named = cands.filter(([p]) => BODYKEY.test(lastKey(p)));
+  const best = (named.length ? named : cands.filter(([, s]) => s.length > 40)).sort((a, b) => b[1].length - a[1].length)[0];
+  if (!best) return '';
+  return toText(best[1]) || (/^\s*</.test(best[1]) ? toText(fromXml(best[1])) : '');
+}
+
+// The id field names for opening a message are unknown, so echo the row's own id-like fields back
+// (the server ignores unknown properties), then try single-GUID guesses.
+function mailPayloads(c) {
+  const ids = (o) => Object.fromEntries(Object.entries(o).filter(([k, v]) => IDKEY.test(k) && ((typeof v === 'string' && v && v.length < 100) || Number.isInteger(v))));
+  const nested = Object.values(c).filter(Array.isArray).flat().find((x) => x && typeof x === 'object'); // a conversation may wrap its messages
+  const all = { ...ids(c), ...(nested ? ids(nested) : {}) };
+  const out = [];
+  if (Object.keys(all).length) out.push({ name: 'row ids', req: { childIntID: 0, ...all } });
+  const guid = Object.values(all).find((v) => typeof v === 'string' && GUIDISH.test(v));
+  if (guid) for (const k of ['messageGU', 'conversationGU', 'synergyMailGU', 'gu']) out.push({ name: k, req: { childIntID: 0, [k]: guid } });
+  return out;
+}
+const BODY_METHODS = ['GetSynergyMailIGetMessageBody', 'GetSynergyMailMessage'];
+let bodyShape = null; // { method, name } that worked last time, tried first
+async function fetchBody(c) {
+  const start = attempts.length;
+  const combos = BODY_METHODS.flatMap((method) => mailPayloads(c).map((p) => ({ method, ...p })));
+  const first = (x) => bodyShape && x.method === bodyShape.method && x.name === bodyShape.name;
+  combos.sort((a, b) => first(b) - first(a));
+  let data = null;
+  for (const x of combos.slice(0, 10)) {
+    const r = await tryCall(x.method, x.req);
+    if (!r.ok) continue;
+    const text = bodyText(r.data);
+    if (text) { bodyShape = { method: x.method, name: x.name }; return { text, data: r.data, tried: attempts.slice(start) }; }
+    data ??= r.data;
+  }
+  return { text: '', data, tried: attempts.slice(start) };
+}
+
+const linkify = (text) => text.split(/(https?:\/\/[^\s<>"')]+)/g)
+  .map((part, i) => (i % 2 ? h('a', { href: part, target: '_blank', rel: 'noopener noreferrer' }, part) : part));
+
+async function openMail(c, box) {
+  box.replaceChildren(h('div', { class: 'muted' }, 'Loading message…'));
+  let res = { text: '', data: null, tried: [] };
+  try { res = await fetchBody(c); }
+  catch (e) { if (e.message === 'expired') return; res.error = e.message; }
+  const inline = bodyText(c), text = res.text || inline;
+  const note = !text ? (res.error || 'Could not read this message yet. Open the diagnostics below and send them over.')
+    : !res.text ? 'Showing the preview from the inbox list; the full message could not be loaded.' : null;
+  box.replaceChildren(
+    h('div', { class: 'mhead' },
+      h('div', { class: 'row-name' }, String(pick(c, SUBJ) ?? '(no subject)')),
+      h('div', { class: 'row-sub' }, [fromName(c), pick(c, MDATE)].filter(Boolean).join(' · '))),
+    text ? h('div', { class: 'mtext' }, ...linkify(text)) : null,
+    note ? h('div', { class: 'row-sub' }, note) : null,
+    c.hasAttachments ? h('div', { class: 'row-sub' }, 'This message has attachments (downloading them is not supported yet).') : null,
+    res.tried.length ? h('details', { class: 'raw' }, h('summary', {}, 'Request diagnostics (safe to share)'), h('pre', {}, JSON.stringify(diag(res.tried), null, 2))) : null,
+    h('details', { class: 'raw' }, h('summary', {}, 'Raw data (contains personal info; redact before sharing)'),
+      h('pre', {}, JSON.stringify({ row: c, fetched: res.data }, null, 2).slice(0, 30000))));
+}
+
+function mailRow(c) {
+  const subj = pick(c, SUBJ) ?? Object.values(c).find((v) => typeof v === 'string') ?? '(no subject)';
+  const body = h('div', { class: 'mbody' });
+  const row = h('details', { class: 'mrow' + (isUnread(c) ? ' unread' : '') },
+    h('summary', {}, h('span', { class: 'dot' }),
+      h('div', { class: 'mmain' },
+        h('div', { class: 'row-name' }, String(subj)),
+        h('div', { class: 'row-sub' }, [fromName(c), pick(c, PREV)].filter(Boolean).join(' — '))),
+      c.hasAttachments ? h('md-icon', {}, 'attach_file') : null,
+      h('div', { class: 'row-sub' }, String(pick(c, MDATE) ?? ''))),
+    body);
+  let opened = false;
+  row.addEventListener('toggle', () => { if (row.open && !opened) { opened = true; openMail(c, body); } });
+  return row;
+}
+
+if (sid) enter(); else show('login');
+</script>
+</body>
+</html>
