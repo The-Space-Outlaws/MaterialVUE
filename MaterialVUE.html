@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0">
 <style>
 :root {
   color-scheme: light dark;
@@ -23,6 +23,7 @@
   --md-sys-color-surface-container: #F3EDF7; --md-sys-color-surface-container-high: #ECE6F0;
   --md-sys-color-surface-container-highest: #E6E0E9;
   --md-sys-color-outline: #79747E; --md-sys-color-outline-variant: #CAC4D0;
+  --ok: #146C2E; --ok-c: #C4EED0; --warn: #B26A00; --warn-c: #FFDF9E; --info: #00629D; --info-c: #CFE5FF;
   --md-ref-typeface-brand: Roboto; --md-ref-typeface-plain: Roboto;
 }
 @media (prefers-color-scheme: dark) {
@@ -37,6 +38,7 @@
     --md-sys-color-surface-container: #211F26; --md-sys-color-surface-container-high: #2B2930;
     --md-sys-color-surface-container-highest: #36343B;
     --md-sys-color-outline: #938F99; --md-sys-color-outline-variant: #49454F;
+    --ok: #A8DAB5; --ok-c: #0F5223; --warn: #FFB74D; --warn-c: #5A4300; --info: #9ECAFF; --info-c: #00497A;
   }
 }
 [hidden] { display: none !important; }
@@ -57,8 +59,11 @@ body { margin: 0; font-family: Roboto, system-ui, sans-serif; background: var(--
 #app { display: grid; grid-template-columns: 300px 1fr; min-height: 100dvh; }
 nav { background: var(--md-sys-color-surface-container); padding: 24px 12px; display: flex; flex-direction: column; gap: 8px; position: sticky; top: 0; height: 100dvh; }
 .brand { font-size: 22px; font-weight: 500; padding: 0 16px; color: var(--md-sys-color-primary); }
-.who { padding: 8px 16px 16px; font-size: 14px; }
-.who b { display: block; font-weight: 500; color: var(--md-sys-color-on-surface); }
+.me { display: flex; align-items: center; gap: 12px; padding: 8px 16px; }
+.me > div:last-child { min-width: 0; font-size: 14px; }
+.me b { display: block; font-weight: 500; font-size: 16px; color: var(--md-sys-color-on-surface); overflow-wrap: anywhere; }
+.photo { width: 64px; height: 64px; flex: none; border-radius: 12px; overflow: hidden; display: grid; place-items: center; background: var(--md-sys-color-surface-container-highest); color: var(--md-sys-color-on-surface-variant); }
+.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nav-item { position: relative; display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; border: 0; border-radius: 28px; background: none; color: var(--md-sys-color-on-surface-variant); font: 500 14px Roboto, sans-serif; cursor: pointer; text-align: left; }
 .nav-item.selected { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
 .spacer { flex: 1; }
@@ -96,32 +101,45 @@ md-linear-progress { width: 100%; --md-linear-progress-track-shape: 4px; --md-li
 .row-score { text-align: right; font-weight: 500; white-space: nowrap; }
 
 #content.list { grid-template-columns: 1fr; max-width: 900px; gap: 8px; }
-.mrow, .raw { background: var(--md-sys-color-surface-container); border-radius: 16px; overflow: hidden; }
-.mrow summary, .raw summary { display: flex; align-items: center; gap: 16px; padding: 14px 20px; cursor: pointer; list-style: none; }
-.mrow summary::-webkit-details-marker, .raw summary::-webkit-details-marker { display: none; }
+.raw { background: var(--md-sys-color-surface-container); border-radius: 16px; overflow: hidden; }
+.raw summary { display: flex; align-items: center; gap: 16px; padding: 14px 20px; cursor: pointer; list-style: none; }
+.raw summary::-webkit-details-marker { display: none; }
 .raw summary { font-size: 13px; color: var(--md-sys-color-on-surface-variant); }
-.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
-.unread .dot { background: var(--md-sys-color-primary); }
-.unread .row-name { font-weight: 700; }
-.mmain { flex: 1; min-width: 0; }
-.mmain .row-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 pre { margin: 0; padding: 12px 20px; overflow: auto; max-height: 320px; font-size: 12px; background: var(--md-sys-color-surface-container-highest); }
-.count { margin-left: auto; min-width: 22px; padding: 2px 8px; border-radius: 11px; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-size: 12px; text-align: center; }
 
-.mbody { padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
-.mhead .row-name, .unread .mhead .row-name { font-size: 18px; font-weight: 500; }
-.mtext { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; line-height: 1.55; }
-.mtext a { color: var(--md-sys-color-primary); }
-.mbody .raw { background: var(--md-sys-color-surface-container-high); border-radius: 12px; }
-.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.loading { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 96px 0; color: var(--md-sys-color-on-surface-variant); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; margin-bottom: 16px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.cal-head { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+.cal-head b { flex: 1; text-align: center; font-size: 20px; font-weight: 500; }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.wd { text-align: center; font-size: 12px; font-weight: 500; padding: 4px 0; color: var(--md-sys-color-on-surface-variant); }
+.day { position: relative; min-height: 76px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 8px; border: 0; border-radius: 16px; background: var(--md-sys-color-surface-container); color: inherit; font: inherit; text-align: left; }
+button.day { cursor: pointer; background: var(--md-sys-color-surface-container-high); }
+.day.out { background: none; }
+.day.today .dn { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.day.sel { outline: 2px solid var(--md-sys-color-primary); }
+.dn { font-size: 13px; min-width: 24px; height: 24px; border-radius: 12px; display: grid; place-items: center; }
+.dots { display: flex; flex-wrap: wrap; gap: 4px; }
+.ic { --md-icon-size: 22px; font-variation-settings: 'FILL' 1; flex: none; } /* filled Material Symbol, like the old portal icons */
+.k-excused { color: var(--ok); }
+.k-tardy { color: var(--warn); }
+.k-unexcused, .k-utardy { color: var(--md-sys-color-error); }
+.k-activity { color: var(--info); }
+.k-notsched, .k-other { color: var(--md-sys-color-outline); }
+.detail { margin-top: 16px; }
+.detail .row { justify-content: flex-start; align-items: center; }
+.section-title { font-size: 14px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); padding: 8px 4px 0; }
 
 @media (max-width: 839px) {
   #app { grid-template-columns: 1fr; }
   nav { position: static; height: auto; flex-direction: row; align-items: center; padding: 12px; overflow-x: auto; }
-  .brand, .who, .spacer { display: none; }
+  .brand, .me, .spacer { display: none; }
   .nav-item { height: 48px; }
   main { padding: 16px 16px 48px; }
   #content { grid-template-columns: 1fr; }
+  .day { min-height: 56px; padding: 4px; }
+  .ic { --md-icon-size: 18px; }
 }
 </style>
 </head>
@@ -145,10 +163,13 @@ pre { margin: 0; padding: 12px 20px; overflow: auto; max-height: 320px; font-siz
 <div id="app" hidden>
   <nav>
     <div class="brand">MaterialVUE</div>
-    <div class="who muted"><b id="student"></b><span id="school"></span></div>
     <button class="nav-item selected" data-tool="gradebook"><md-ripple></md-ripple><md-icon>grading</md-icon>Gradebook</button>
-    <button class="nav-item" data-tool="messages"><md-ripple></md-ripple><md-icon>mail</md-icon>Messages<span class="count" id="unread" hidden></span></button>
+    <button class="nav-item" data-tool="attendance"><md-ripple></md-ripple><md-icon>event_available</md-icon>Attendance</button>
     <div class="spacer"></div>
+    <div class="me" id="me" hidden>
+      <div class="photo" id="photo"><md-icon>person</md-icon></div>
+      <div class="muted"><b id="hello"></b><span id="school"></span></div>
+    </div>
     <button class="nav-item" id="signout"><md-ripple></md-ripple><md-icon>logout</md-icon>Sign out</button>
   </nav>
   <main>
@@ -243,12 +264,12 @@ $('#form').addEventListener('submit', async (e) => {
 
 $('#signout').addEventListener('click', () => signOut(''));
 let tool = 'gradebook';
-const reload = () => (tool === 'messages' ? loadMessages(0) : loadGradebook($('#periods md-outlined-select')?.value ?? ''));
+const reload = () => (tool === 'attendance' ? loadAttendance() : loadGradebook($('#periods md-outlined-select')?.value ?? ''));
 function openTool(t) {
   tool = t;
   document.querySelectorAll('.nav-item[data-tool]').forEach((b) => b.classList.toggle('selected', b.dataset.tool === t));
-  $('#title').textContent = t === 'messages' ? 'Messages' : 'Gradebook';
-  $('#content').className = t === 'messages' ? 'list' : '';
+  $('#title').textContent = t === 'attendance' ? 'Attendance' : 'Gradebook';
+  $('#content').className = t === 'attendance' ? 'list' : '';
   $('#periods').replaceChildren();
   reload();
 }
@@ -259,10 +280,20 @@ function enter() {
   show('app');
   sv('GetChildListData', { legacyAppRequest: false, secondaryLogin: false })
     .then((d) => {
-      const c = d?.children?.childInfos?.[0];
-      if (c) { $('#student').textContent = c.name || ''; $('#school').textContent = c.schoolName || ''; }
+      const c = d?.children?.childrenList?.[0]; // real field names, taken from a live response (the API doc's childInfos/name don't exist)
+      if (!c) return;
+      $('#hello').textContent = `Hello, ${c.childFirstName || String(c.childName || 'student').split(' ')[0]}!`;
+      $('#school').textContent = c.organizationName || '';
+      if (c.photo && /^[A-Za-z0-9+/=\s]+$/.test(c.photo)) $('#photo').replaceChildren(h('img', { src: 'data:image/png;base64,' + c.photo, alt: '' }));
+      $('#me').hidden = false;
     }).catch(() => {});
-  sv('GetSynergyMailUnreadCount', {}).then((d) => setUnread(d?.messageCount)).catch(() => {});
+  // The doc says the photo is in GetStudentInfoData's studentInfoXML (a JSON object despite the name); field name unverified, so search for it.
+  sv('GetStudentInfoData', { childIntID: 0 }).then((d) => {
+    const find = (v, d0 = 0) => v && typeof v === 'object' && d0 < 5
+      ? Object.entries(v).reduce((r, [k, x]) => r || (/photo|picture|image/i.test(k) && typeof x === 'string' && x.length > 200 ? x : find(x, d0 + 1)), null) : null;
+    const b64 = find(d?.studentInfoXML) || find(d);
+    if (b64 && /^[A-Za-z0-9+/=\s]+$/.test(b64)) $('#photo').replaceChildren(h('img', { src: `data:image/${b64.startsWith('/9j') ? 'jpeg' : 'png'};base64,` + b64, alt: '' }));
+  }).catch(() => {}); // no photo there: the one from the child list stays
   openTool('gradebook');
 }
 
@@ -277,16 +308,19 @@ const PTS = ['points', 'maxPoints', 'possiblePoints'];
 const NOTES = ['notes', 'description'];
 const toTime = (s) => { const m = /(\d+)\/(\d+)\/(\d+)/.exec(s || ''); return m ? new Date(m[3], m[1] - 1, m[2]).getTime() : 0; };
 
+const loading = (item) => $('#content').replaceChildren(h('div', { class: 'loading', role: 'status' }, h('md-circular-progress', { indeterminate: true, 'aria-label': 'Loading' }), `Loading ${item} from StudentVUE`));
+
 const message = (text, icon = 'info') => $('#content').replaceChildren(h('div', { class: 'msg' }, h('md-icon', {}, icon), text));
 
 async function loadGradebook(period = '') {
   $('#bar').hidden = false;
+  loading('gradebook');
   try {
     const d = await sv('Gradebook', { reportPeriod: period, concurrentSchOrgYearGU: '', childIntID: 0, languageCode: 'en' });
     if (tool !== 'gradebook') return;
     renderGradebook(d.traditionalGradebook, d.standardsGradebook, period);
   } catch (e) {
-    if (e.message === 'expired') return;
+    if (e.message === 'expired' || tool !== 'gradebook') return;
     message(e.code === '2100' ? "Gradebook isn't available for this school." : e.message, 'error');
   } finally { $('#bar').hidden = true; }
 }
@@ -348,231 +382,90 @@ function assignRow(a) {
       pts != null && pts !== score ? h('div', { class: 'row-sub' }, String(pts)) : null));
 }
 
-/* ---------- messages (Synergy Mail) ---------- */
-// Read-only on purpose: list + open, nothing that sends, deletes or moves mail.
-// Verified against a live server: GetSynergyMailGetConversations needs childIntID (the API doc omits it; without it the
-// server answers 500). Opening a message is still unverified, so that path tries a few request shapes, remembers the
-// first that works, and every attempt is kept as a diagnostic (shapes and error codes only, no personal data).
-const SUBJ = ['subject', 'subjectLine', 'title'];
-const FROM = ['senderName', 'fromName', 'from', 'sender', 'lastSenderName'];
-const MDATE = ['sendDateTimeFormattedShort', 'date', 'sentDate', 'lastMessageDate', 'dateTime', 'sentDateTime'];
-const PREV = ['preview', 'snippet', 'bodyPreview', 'lastMessage'];
-const GUIDISH = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
-const isUnread = (c) => c.mailRead === false || ['unread', 'isUnread', 'hasUnread', 'unreadCount', 'unreadMessages'].some((k) => c[k] === true || Number(c[k]) > 0);
-const fromName = (c) => pick(c, FROM) ?? c.from?.contactDetails1 ?? c.fromOption?.description ?? null; // names seen in the web portal's GetMessages
-const findList = (v) => (Array.isArray(v) ? v : v && typeof v === 'object' ? Object.values(v).find(Array.isArray) ?? [] : []);
-function setUnread(v) {
-  const n = typeof v === 'object' ? NaN : Number(v);
-  $('#unread').textContent = n; $('#unread').hidden = !(n > 0);
-}
+/* ---------- attendance ---------- */
+// Shapes verified from a real log: periodAttendance.absences[] = { absenceDate, reason, note, dailyIconName, codeAllDayDescription,
+// periods[] = { number, name, reason, course, staff, iconName } }. The old portal's gif icons are mapped to kinds by name.
+const KINDS = {
+  excused: ['Excused', 'check_circle'], tardy: ['Tardy', 'schedule'], unexcused: ['Unexcused', 'cancel'],
+  utardy: ['Unexcused tardy', 'alarm'], activity: ['Activity', 'flag'], notsched: ['Not scheduled', 'block'], other: ['Other', 'info'],
+};
+const kindOf = (...s) => {
+  const t = s.filter(Boolean).join(' ').toLowerCase();
+  return /not.?sched/.test(t) ? 'notsched' : /(unx|unexcused).*tard|tard.*(unx|unexcused)/.test(t) ? 'utardy' : /tard/.test(t) ? 'tardy'
+    : /unx|unexcused|absent/.test(t) ? 'unexcused' : /excused/.test(t) ? 'excused' : /activity|suspension/.test(t) ? 'activity' : t ? 'other' : null;
+};
+const icon = (k) => h('md-icon', { class: 'ic k-' + k, title: KINDS[k][0] }, KINDS[k][1]);
+const ymd = (d) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 
-// Same idea as the backend's redact(): keep keys, numbers, booleans; hide every string.
-const shape = (v) => Array.isArray(v) ? (v.length > 2 ? [...v.slice(0, 2).map(shape), `... ${v.length} items`] : v.map(shape))
-  : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, shape(x)]))
-  : typeof v === 'string' && v.length > 4 ? (GUIDISH.test(v) ? '<guid>' : `<str ${v.length}>`) : v;
-
-const attempts = [];
-const diag = (list) => list.map((a) => ({ method: a.method, request: shape(a.request), ok: a.ok, ...(a.ok ? { response: shape(a.data) } : { error: a.error }) }));
-async function tryCall(method, inner) {
-  const rec = { method, request: inner };
-  attempts.push(rec);
-  try { rec.data = await sv(method, inner); rec.ok = true; }
-  catch (e) {
-    // Expiry, transport trouble and "not enabled" end the whole attempt; only server-side rejections move to the next shape.
-    if (e.message === 'expired' || !e.code || e.code === '2100') throw e;
-    rec.ok = false; rec.error = `${e.code}: ${e.message}`;
+let att = new Map(), view = new Date(), picked = null; // att: "y-m-d" -> { kinds, periods, e }
+function buildAtt(entries) {
+  att = new Map();
+  for (const e of entries) {
+    const m = /(\d+)\/(\d+)\/(\d+)/.exec(e.absenceDate || '');
+    if (!m) continue;
+    const key = `${m[3]}-${+m[1]}-${+m[2]}`;
+    if (att.has(key)) continue; // same day in two lists: first wins
+    const periods = (e.periods || []).map((p) => ({ ...p, kind: kindOf(p.iconName, p.name, p.reason) })).filter((p) => p.kind);
+    const kinds = [...new Set([kindOf(e.dailyIconName, e.codeAllDayDescription, e.reason), ...periods.map((p) => p.kind)].filter(Boolean))];
+    att.set(key, { e, periods, kinds: kinds.length ? kinds : ['other'], date: new Date(+m[3], m[1] - 1, +m[2]) });
   }
-  return rec;
 }
 
-/* inbox */
-const INBOX_SHAPES = [
-  { name: 'verified', base: 0, extra: { childIntID: 0 } },
-  { name: '1-based pages', base: 1, extra: { childIntID: 0 } }, // hedge for servers that page from 1
-];
-let inboxShape = null; // the shape that worked, reused for paging and later reloads
-async function fetchInbox(page) {
-  for (const s of inboxShape ? [inboxShape] : page === 0 ? INBOX_SHAPES : []) {
-    const r = await tryCall('GetSynergyMailGetConversations', { pageToLoad: page + s.base, ...s.extra });
-    if (r.ok) { inboxShape = s; return r.data; }
+function renderAtt() {
+  const y = view.getFullYear(), mo = view.getMonth(), now = new Date();
+  const dates = [...att.values()].map((v) => v.date.getTime());
+  const lo = new Date(Math.min(...dates, now.getTime())), hi = new Date(Math.max(...dates, now.getTime()));
+  const idx = (d) => d.getFullYear() * 12 + d.getMonth(), cur = y * 12 + mo;
+  const go = (n) => { view = new Date(y, mo + n, 1); picked = null; renderAtt(); };
+  const counts = {};
+  for (const v of att.values()) for (const k of v.kinds) counts[k] = (counts[k] || 0) + 1;
+
+  const cells = Array.from({ length: new Date(y, mo, 1).getDay() }, () => h('div', { class: 'day out' }));
+  for (let n = 1; n <= new Date(y, mo + 1, 0).getDate(); n++) {
+    const key = `${y}-${mo + 1}-${n}`, v = att.get(key);
+    const cls = 'day' + (key === ymd(now) ? ' today' : '') + (key === picked ? ' sel' : '');
+    cells.push(v
+      ? h('button', { class: cls, 'aria-label': `${v.e.absenceDate}: ${v.kinds.map((k) => KINDS[k][0]).join(', ')}`, onclick() { picked = key; renderAtt(); } },
+        h('md-ripple'), h('span', { class: 'dn' }, n), h('span', { class: 'dots' }, ...v.kinds.map(icon)))
+      : h('div', { class: cls }, h('span', { class: 'dn' }, n)));
   }
-  return null;
+
+  const sel = att.get(picked);
+  $('#content').replaceChildren(h('div', {},
+    h('div', { class: 'legend' }, ...Object.keys(KINDS).filter((k) => counts[k]).map((k) => h('span', {}, icon(k), `${KINDS[k][0]} (${counts[k]})`))),
+    h('div', { class: 'cal-head' },
+      h('md-icon-button', { 'aria-label': 'Previous month', disabled: cur <= idx(lo), onclick: () => go(-1) }, h('md-icon', {}, 'chevron_left')),
+      h('b', {}, view.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })),
+      h('md-icon-button', { 'aria-label': 'Next month', disabled: cur >= idx(hi), onclick: () => go(1) }, h('md-icon', {}, 'chevron_right'))),
+    h('div', { class: 'cal' }, ...['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => h('div', { class: 'wd' }, d)), ...cells),
+    sel ? h('div', { class: 'course detail' },
+      h('div', { class: 'row' }, ...sel.kinds.map(icon),
+        h('div', {}, h('div', { class: 'row-name' }, sel.date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })),
+          h('div', { class: 'row-sub' }, [sel.e.codeAllDayDescription || sel.e.reason, sel.e.note].filter(Boolean).join(' · ') || sel.kinds.map((k) => KINDS[k][0]).join(', ')))),
+      ...sel.periods.map((p) => h('div', { class: 'row' }, icon(p.kind),
+        h('div', {}, h('div', { class: 'row-name' }, `Period ${p.number} · ${p.course || ''}`),
+          h('div', { class: 'row-sub' }, [p.name || KINDS[p.kind][0], p.reason, p.staff].filter(Boolean).join(' · ')))))) : null));
 }
 
-async function loadMessages(page = 0) {
+async function loadAttendance() {
   $('#bar').hidden = false;
-  if (page === 0) attempts.length = 0;
+  loading('attendance');
   try {
-    const d = await fetchInbox(page);
-    if (tool !== 'messages') return;
-    if (!d) {
-      inboxShape = null;
-      if (page > 0) return $('#content').append(h('div', { class: 'msg' }, h('md-icon', {}, 'error'), 'Could not load more messages.'));
-      await tryCall('GetSynergyMailInboxCount', {}); // extra probe: shows whether the mail service answers at all and how it is organised
-      if (tool === 'messages') mailFailure();
-      return;
-    }
-    setUnread(d.totalUnreadConversationMessages);
-    renderMessages(d, page);
+    const [cur, past] = await Promise.all([
+      sv('GetStudentAttendanceList', { childIntID: 0 }),
+      // 400 = school doesn't expose past attendance (seen live), 2100 = not enabled: just means no extra history
+      sv('GetStudentPastAttendanceData', { childIntID: 0 }).catch((e) => { if (e.code === '400' || e.code === '2100') return null; throw e; }),
+    ]);
+    if (tool !== 'attendance') return;
+    // shortcut: past data's shape is unverified; it is only used if it looks like the current one (absences[])
+    buildAtt([cur.periodAttendance, cur.dailyAttendance, past?.reportPastAtteendanceXML].flatMap((x) => (Array.isArray(x?.absences) ? x.absences : [])));
+    view = new Date();
+    picked = null;
+    renderAtt();
   } catch (e) {
-    if (e.message === 'expired') return;
-    message(e.code === '2100' ? "Synergy Mail isn't available for this school." : e.message, 'error');
+    if (e.message === 'expired' || tool !== 'attendance') return;
+    message(e.code === '2100' ? "Attendance isn't available for this school." : e.message, 'error');
   } finally { $('#bar').hidden = true; }
-}
-
-function mailFailure() {
-  const text = JSON.stringify({ attempts: diag(attempts) }, null, 2);
-  const copy = async (e) => { try { await navigator.clipboard.writeText(text); e.target.textContent = 'Copied'; } catch { e.target.textContent = 'Copy failed, select the text below'; } };
-  $('#content').replaceChildren(
-    h('div', { class: 'msg' }, h('md-icon', {}, 'error'),
-      h('div', {},
-        h('div', { class: 'row-name' }, 'The mail server refused every inbox request I tried.'),
-        h('div', { class: 'row-sub' }, 'The mail service itself is reachable (the unread counter works), so the inbox call probably needs a field this client does not know yet. The diagnostics below contain no personal data.'))),
-    h('div', { class: 'actions' },
-      h('md-filled-tonal-button', { onclick: copy }, 'Copy diagnostics'),
-      h('md-outlined-button', { onclick: () => loadMessages(0) }, 'Try again')),
-    h('details', { class: 'raw', open: true }, h('summary', {}, 'Diagnostics (safe to share)'), h('pre', {}, text)));
-}
-
-// Empty inbox but mail exists elsewhere: ask the mail service how it is organised (counts/folders) and show it.
-async function probeMailbox() {
-  const start = attempts.length;
-  let ok = null;
-  try {
-    for (const req of [{ childIntID: 0 }, {}]) {
-      const r = await tryCall('GetSynergyMailInboxCount', req);
-      if (r.ok) { ok = r.data; break; }
-    }
-  } catch (e) { if (e.message === 'expired') return; }
-  const box = $('#content');
-  if (tool !== 'messages' || !box.querySelector('.msg')) return;
-  box.append(
-    h('details', { class: 'raw', open: true }, h('summary', {}, 'Mailbox diagnostics (safe to share)'),
-      h('pre', {}, JSON.stringify(diag(attempts.slice(start)), null, 2))),
-    ok ? h('details', { class: 'raw' }, h('summary', {}, 'Mailbox raw data (may contain folder names)'),
-      h('pre', {}, JSON.stringify(ok, null, 2).slice(0, 30000))) : null);
-}
-
-function renderMessages(d, page) {
-  const items = findList(d.conversations ?? d), box = $('#content');
-  if (page === 0) box.replaceChildren(h('details', { class: 'raw' },
-    h('summary', {}, 'Raw response (contains personal info; redact before sharing)'),
-    h('pre', {}, JSON.stringify(d, null, 2).slice(0, 30000))));
-  box.querySelector('.more')?.remove();
-  if (page === 0 && !items.length) {
-    box.append(h('div', { class: 'msg' }, h('md-icon', {}, 'inbox'),
-      h('div', {},
-        h('div', { class: 'row-name' }, 'The server returned no conversations (0 unread).'),
-        h('div', { class: 'row-sub' }, 'If the web portal shows older mail, this request is probably filtered (unread only, a different folder, or a date window). The mailbox diagnostics below show how the server organises it.'))));
-    probeMailbox();
-  }
-  box.append(...items.map(mailRow));
-  if (d.isLastPageLoaded === false) box.append(h('md-outlined-button', { class: 'more', onclick: () => loadMessages(page + 1) }, 'Load more'));
-}
-
-/* reading a message */
-function strings(v, path = '', out = []) {
-  if (typeof v === 'string') out.push([path, v]);
-  else if (Array.isArray(v)) v.forEach((x, i) => strings(x, `${path}[${i}]`, out));
-  else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) strings(x, path ? `${path}.${k}` : k, out);
-  return out;
-}
-const lastKey = (p) => p.split('.').pop().replace(/\[\d+\]$/, '');
-const BODYKEY = /body|content|text|html|message/i, NOTBODY = /subject|title|name|date|time|sender|recipient|from|^(to|cc|bcc)$/i, IDKEY = /(gu|id)$/i;
-
-// Message HTML is parsed with DOMParser (inert: no script runs, nothing loads) and only its text is kept.
-function toText(s) {
-  let t = String(s);
-  for (let i = 0; i < 2 && /<[a-z!/][^>]*>/i.test(t); i++) {
-    t = t.replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|div|li|tr|h[1-6]|blockquote)>/gi, '\n');
-    const doc = new DOMParser().parseFromString(t, 'text/html');
-    doc.querySelectorAll('script,style').forEach((n) => n.remove());
-    t = doc.body.textContent;
-  }
-  return t.replace(/\r\n?/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
-}
-function fromXml(s) { // some mail fields are real XML strings whose text lives in an attribute
-  const doc = new DOMParser().parseFromString(s, 'text/xml');
-  if (doc.querySelector('parsererror')) return '';
-  const vals = [];
-  doc.querySelectorAll('*').forEach((n) => { if (!n.children.length) vals.push(n.textContent); for (const a of n.attributes) vals.push(a.value); });
-  return vals.sort((a, b) => b.length - a.length)[0] || '';
-}
-function bodyText(data) {
-  const cands = strings(data).filter(([p, s]) => s.trim() && !GUIDISH.test(s.trim()) && !IDKEY.test(lastKey(p)) && !NOTBODY.test(lastKey(p)));
-  const named = cands.filter(([p]) => BODYKEY.test(lastKey(p)));
-  const best = (named.length ? named : cands.filter(([, s]) => s.length > 40)).sort((a, b) => b[1].length - a[1].length)[0];
-  if (!best) return '';
-  return toText(best[1]) || (/^\s*</.test(best[1]) ? toText(fromXml(best[1])) : '');
-}
-
-// The id field names for opening a message are unknown, so echo the row's own id-like fields back
-// (the server ignores unknown properties), then try single-GUID guesses.
-function mailPayloads(c) {
-  const ids = (o) => Object.fromEntries(Object.entries(o).filter(([k, v]) => IDKEY.test(k) && ((typeof v === 'string' && v && v.length < 100) || Number.isInteger(v))));
-  const nested = Object.values(c).filter(Array.isArray).flat().find((x) => x && typeof x === 'object'); // a conversation may wrap its messages
-  const all = { ...ids(c), ...(nested ? ids(nested) : {}) };
-  const out = [];
-  if (Object.keys(all).length) out.push({ name: 'row ids', req: { childIntID: 0, ...all } });
-  const guid = Object.values(all).find((v) => typeof v === 'string' && GUIDISH.test(v));
-  if (guid) for (const k of ['messageGU', 'conversationGU', 'synergyMailGU', 'gu']) out.push({ name: k, req: { childIntID: 0, [k]: guid } });
-  return out;
-}
-const BODY_METHODS = ['GetSynergyMailIGetMessageBody', 'GetSynergyMailMessage'];
-let bodyShape = null; // { method, name } that worked last time, tried first
-async function fetchBody(c) {
-  const start = attempts.length;
-  const combos = BODY_METHODS.flatMap((method) => mailPayloads(c).map((p) => ({ method, ...p })));
-  const first = (x) => bodyShape && x.method === bodyShape.method && x.name === bodyShape.name;
-  combos.sort((a, b) => first(b) - first(a));
-  let data = null;
-  for (const x of combos.slice(0, 10)) {
-    const r = await tryCall(x.method, x.req);
-    if (!r.ok) continue;
-    const text = bodyText(r.data);
-    if (text) { bodyShape = { method: x.method, name: x.name }; return { text, data: r.data, tried: attempts.slice(start) }; }
-    data ??= r.data;
-  }
-  return { text: '', data, tried: attempts.slice(start) };
-}
-
-const linkify = (text) => text.split(/(https?:\/\/[^\s<>"')]+)/g)
-  .map((part, i) => (i % 2 ? h('a', { href: part, target: '_blank', rel: 'noopener noreferrer' }, part) : part));
-
-async function openMail(c, box) {
-  box.replaceChildren(h('div', { class: 'muted' }, 'Loading message…'));
-  let res = { text: '', data: null, tried: [] };
-  try { res = await fetchBody(c); }
-  catch (e) { if (e.message === 'expired') return; res.error = e.message; }
-  const inline = bodyText(c), text = res.text || inline;
-  const note = !text ? (res.error || 'Could not read this message yet. Open the diagnostics below and send them over.')
-    : !res.text ? 'Showing the preview from the inbox list; the full message could not be loaded.' : null;
-  box.replaceChildren(
-    h('div', { class: 'mhead' },
-      h('div', { class: 'row-name' }, String(pick(c, SUBJ) ?? '(no subject)')),
-      h('div', { class: 'row-sub' }, [fromName(c), pick(c, MDATE)].filter(Boolean).join(' · '))),
-    text ? h('div', { class: 'mtext' }, ...linkify(text)) : null,
-    note ? h('div', { class: 'row-sub' }, note) : null,
-    c.hasAttachments ? h('div', { class: 'row-sub' }, 'This message has attachments (downloading them is not supported yet).') : null,
-    res.tried.length ? h('details', { class: 'raw' }, h('summary', {}, 'Request diagnostics (safe to share)'), h('pre', {}, JSON.stringify(diag(res.tried), null, 2))) : null,
-    h('details', { class: 'raw' }, h('summary', {}, 'Raw data (contains personal info; redact before sharing)'),
-      h('pre', {}, JSON.stringify({ row: c, fetched: res.data }, null, 2).slice(0, 30000))));
-}
-
-function mailRow(c) {
-  const subj = pick(c, SUBJ) ?? Object.values(c).find((v) => typeof v === 'string') ?? '(no subject)';
-  const body = h('div', { class: 'mbody' });
-  const row = h('details', { class: 'mrow' + (isUnread(c) ? ' unread' : '') },
-    h('summary', {}, h('span', { class: 'dot' }),
-      h('div', { class: 'mmain' },
-        h('div', { class: 'row-name' }, String(subj)),
-        h('div', { class: 'row-sub' }, [fromName(c), pick(c, PREV)].filter(Boolean).join(' — '))),
-      c.hasAttachments ? h('md-icon', {}, 'attach_file') : null,
-      h('div', { class: 'row-sub' }, String(pick(c, MDATE) ?? ''))),
-    body);
-  let opened = false;
-  row.addEventListener('toggle', () => { if (row.open && !opened) { opened = true; openMail(c, body); } });
-  return row;
 }
 
 if (sid) enter(); else show('login');
