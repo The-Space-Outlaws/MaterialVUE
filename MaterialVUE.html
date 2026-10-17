@@ -18,13 +18,14 @@
   --md-sys-color-secondary: #625B71; --md-sys-color-on-secondary: #fff;
   --md-sys-color-secondary-container: #E8DEF8; --md-sys-color-on-secondary-container: #1D192B;
   --md-sys-color-tertiary-container: #FFD8E4; --md-sys-color-on-tertiary-container: #31111D;
-  --md-sys-color-error: #B3261E; --md-sys-color-error-container: #F9DEDC; --md-sys-color-on-error-container: #410E0B;
+  --md-sys-color-error: #B3261E; --md-sys-color-on-error: #fff; --md-sys-color-error-container: #F9DEDC; --md-sys-color-on-error-container: #410E0B;
   --md-sys-color-surface: #FEF7FF; --md-sys-color-on-surface: #1D1B20; --md-sys-color-on-surface-variant: #49454F;
   --md-sys-color-surface-container: #F3EDF7; --md-sys-color-surface-container-high: #ECE6F0;
   --md-sys-color-surface-container-highest: #E6E0E9;
   --md-sys-color-outline: #79747E; --md-sys-color-outline-variant: #CAC4D0;
   --ok: #146C2E; --ok-c: #C4EED0; --warn: #B26A00; --warn-c: #FFDF9E; --info: #00629D; --info-c: #CFE5FF;
   --md-ref-typeface-brand: Roboto; --md-ref-typeface-plain: Roboto;
+  --banner-h: 0px; /* height of the logging notice, set from JS */
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -33,7 +34,7 @@
     --md-sys-color-secondary: #CCC2DC; --md-sys-color-on-secondary: #332D41;
     --md-sys-color-secondary-container: #4A4458; --md-sys-color-on-secondary-container: #E8DEF8;
     --md-sys-color-tertiary-container: #633B48; --md-sys-color-on-tertiary-container: #FFD8E4;
-    --md-sys-color-error: #F2B8B5; --md-sys-color-error-container: #8C1D18; --md-sys-color-on-error-container: #F9DEDC;
+    --md-sys-color-error: #F2B8B5; --md-sys-color-on-error: #601410; --md-sys-color-error-container: #8C1D18; --md-sys-color-on-error-container: #F9DEDC;
     --md-sys-color-surface: #141218; --md-sys-color-on-surface: #E6E0E9; --md-sys-color-on-surface-variant: #CAC4D0;
     --md-sys-color-surface-container: #211F26; --md-sys-color-surface-container-high: #2B2930;
     --md-sys-color-surface-container-highest: #36343B;
@@ -46,8 +47,16 @@
 body { margin: 0; font-family: Roboto, system-ui, sans-serif; background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); }
 .muted { color: var(--md-sys-color-on-surface-variant); }
 
+/* logging notice */
+#notice { position: sticky; top: 0; z-index: 20; display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; font-size: 14px; line-height: 1.45; }
+#notice.raw { background: var(--md-sys-color-error); color: var(--md-sys-color-on-error); }
+#notice.redacted { background: var(--warn-c); color: var(--md-sys-color-on-surface); }
+#notice .ntext { flex: 1; min-width: 0; padding-top: 2px; }
+#notice .nclose { flex: none; width: 32px; height: 32px; margin: -4px -4px -4px 0; border: 0; border-radius: 50%; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; }
+#notice .nclose:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
+
 /* login */
-#login { min-height: 100dvh; display: grid; place-items: center; padding: 16px; }
+#login { min-height: calc(100dvh - var(--banner-h)); display: grid; place-items: center; padding: 16px; }
 #form { width: min(440px, 100%); background: var(--md-sys-color-surface-container); border-radius: 28px; padding: 32px; display: flex; flex-direction: column; gap: 16px; }
 #form h1 { margin: 0; font-size: 32px; font-weight: 500; }
 #form p { margin: 0 0 8px; font-size: 14px; }
@@ -56,8 +65,8 @@ body { margin: 0; font-family: Roboto, system-ui, sans-serif; background: var(--
 #signin { align-self: flex-end; }
 
 /* app shell */
-#app { display: grid; grid-template-columns: 300px 1fr; min-height: 100dvh; }
-nav { background: var(--md-sys-color-surface-container); padding: 24px 12px; display: flex; flex-direction: column; gap: 8px; position: sticky; top: 0; height: 100dvh; }
+#app { display: grid; grid-template-columns: 300px 1fr; min-height: calc(100dvh - var(--banner-h)); }
+nav { background: var(--md-sys-color-surface-container); padding: 24px 12px; display: flex; flex-direction: column; gap: 8px; position: sticky; top: var(--banner-h); height: calc(100dvh - var(--banner-h)); }
 .brand { font-size: 22px; font-weight: 500; padding: 0 16px; color: var(--md-sys-color-primary); }
 .me { display: flex; align-items: center; gap: 12px; padding: 8px 16px; }
 .me > div:last-child { min-width: 0; font-size: 14px; }
@@ -71,7 +80,7 @@ main { padding: 24px 32px 48px; min-width: 0; }
 .top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
 .top h2 { margin: 0; font-size: 32px; font-weight: 400; flex: 1; }
 #periods md-outlined-select { min-width: 200px; }
-#bar { position: fixed; top: 0; left: 0; right: 0; z-index: 5; }
+#bar { position: fixed; top: var(--banner-h); left: 0; right: 0; z-index: 5; }
 
 /* gradebook */
 #content { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; align-items: start; }
@@ -131,6 +140,73 @@ button.day { cursor: pointer; background: var(--md-sys-color-surface-container-h
 .detail .row { justify-content: flex-start; align-items: center; }
 .section-title { font-size: 14px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); padding: 8px 4px 0; }
 
+/* class schedules */
+.pf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
+.pf .section-title { padding: 0 8px 0 0; }
+.pchip { height: 32px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--md-sys-color-outline); background: none; color: var(--md-sys-color-on-surface-variant); font: 500 14px Roboto, sans-serif; cursor: pointer; }
+.pchip[aria-pressed="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); border-color: transparent; }
+.note { font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin: 0 4px 12px; }
+main.centered .top { max-width: 640px; margin-inline: auto; }
+#content.center { max-width: 640px; margin-inline: auto; }
+.pf { justify-content: center; }
+.pf .section-title { display: none; }
+.sched { background: var(--md-sys-color-surface-container); border-radius: 28px; overflow: hidden; }
+.sched-row { display: grid; grid-template-columns: 52px 1fr auto; gap: 16px; align-items: center; padding: 16px 20px; }
+.sched-row + .sched-row { border-top: 1px solid var(--md-sys-color-outline-variant); }
+.pnum { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; font-weight: 500; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+.sched-title { font-size: 17px; font-weight: 500; line-height: 1.25; overflow-wrap: anywhere; }
+.sched-sub { font-size: 14px; margin-top: 2px; color: var(--md-sys-color-on-surface-variant); overflow-wrap: anywhere; }
+.room { font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 8px; background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); white-space: nowrap; text-align: center; }
+
+/* hall pass */
+.hp-form { background: var(--md-sys-color-surface-container); border-radius: 28px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.hp-form h3 { margin: 0; font-size: 22px; font-weight: 500; }
+.hp-form md-outlined-select { width: 100%; }
+.hp-form md-filled-button { align-self: flex-end; }
+.hp-card { background: var(--md-sys-color-surface-container); border-radius: 28px; padding: 24px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+.hp-name { font-size: 24px; font-weight: 500; line-height: 1.2; margin: 8px 0 12px; overflow-wrap: anywhere; }
+.hp-line { display: flex; align-items: center; gap: 10px; font-size: 16px; margin-top: 8px; }
+.hp-line md-icon { color: var(--md-sys-color-on-surface-variant); }
+.st { display: inline-block; font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 8px; }
+.st-active { background: var(--ok-c); color: var(--ok); }
+.st-pending { background: var(--warn-c); color: var(--warn); }
+.hp-ring { position: relative; width: 148px; height: 148px; }
+.hp-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.hp-ring .track { fill: none; stroke: var(--md-sys-color-surface-container-highest); stroke-width: 10; }
+.hp-ring .bar { fill: none; stroke: var(--md-sys-color-primary); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset .9s linear, stroke .3s; }
+.hp-ring .bar.low { stroke: var(--md-sys-color-error); }
+.hp-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.hp-center b { font-size: 30px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.hp-center small { font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+.hp-x { position: absolute; top: -8px; right: -8px; width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; background: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
+.hp-x:disabled { opacity: .5; cursor: default; }
+.hp-note { margin: 12px 4px 0; font-size: 13px; color: var(--md-sys-color-on-surface-variant); text-align: center; }
+.hp-err { margin-top: 12px; }
+
+/* login: remember me + continue */
+.remember { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--md-sys-color-on-surface-variant); cursor: pointer; }
+#resume-wrap { display: flex; flex-direction: column; gap: 4px; }
+#resume { width: 100%; }
+.link-btn { align-self: center; border: 0; background: none; padding: 8px 12px; border-radius: 16px; color: var(--md-sys-color-primary); font: 500 14px Roboto, sans-serif; cursor: pointer; }
+
+/* settings */
+.set-wrap { display: flex; flex-direction: column; gap: 16px; }
+.set-card { background: var(--md-sys-color-surface-container); border-radius: 28px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.set-card h3 { margin: 0; font-size: 22px; font-weight: 500; }
+.set-card > md-outlined-button, .set-card > md-text-button { align-self: flex-start; }
+.chiprow, .swatches { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.sw { position: relative; width: 44px; height: 44px; padding: 0; border-radius: 50%; border: 2px solid var(--md-sys-color-outline-variant); display: grid; place-items: center; cursor: pointer; color: #fff; overflow: hidden; }
+.sw[aria-pressed="true"] { border-color: var(--md-sys-color-on-surface); box-shadow: 0 0 0 2px var(--md-sys-color-surface-container), 0 0 0 4px var(--md-sys-color-primary); }
+.sw.custom { background: conic-gradient(#e53935, #fdd835, #43a047, #1e88e5, #8e24aa, #e53935); }
+.sw.custom input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; }
+.ord-row { display: flex; align-items: center; gap: 12px; }
+.ord-row md-icon { color: var(--md-sys-color-on-surface-variant); }
+.ord-row .grow { flex: 1; font-size: 16px; }
+
+@media (max-width: 839px) {
+  .hp-card { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .hp-line { justify-content: center; }
+}
 @media (max-width: 839px) {
   #app { grid-template-columns: 1fr; }
   nav { position: static; height: auto; flex-direction: row; align-items: center; padding: 12px; overflow-x: auto; }
@@ -139,11 +215,16 @@ button.day { cursor: pointer; background: var(--md-sys-color-surface-container-h
   main { padding: 16px 16px 48px; }
   #content { grid-template-columns: 1fr; }
   .day { min-height: 56px; padding: 4px; }
+  .sched-row { grid-template-columns: 44px 1fr; padding: 14px 16px; gap: 12px; }
+  .pnum { width: 44px; height: 44px; font-size: 18px; }
+  .room { grid-column: 2; justify-self: start; }
   .ic { --md-icon-size: 18px; }
 }
 </style>
 </head>
 <body>
+
+<div id="notice" aria-live="polite" hidden></div>
 
 <section id="login" hidden>
   <form id="form" novalidate>
@@ -155,8 +236,13 @@ button.day { cursor: pointer; background: var(--md-sys-color-surface-container-h
     <div id="zipwrap" hidden>
       <md-filled-text-field id="zip" label="District ZIP code" inputmode="numeric" maxlength="5"></md-filled-text-field>
     </div>
+    <label class="remember"><md-checkbox id="remember" touch-target="wrapper" checked></md-checkbox><span>Remember me on this device (not for shared computers)</span></label>
     <div id="err" role="alert" hidden></div>
     <md-filled-button id="signin" type="submit">Sign in</md-filled-button>
+    <div id="resume-wrap" hidden>
+      <md-outlined-button id="resume" type="button"></md-outlined-button>
+      <button type="button" class="link-btn" id="forget-login">Not you? Forget this device</button>
+    </div>
   </form>
 </section>
 
@@ -165,11 +251,14 @@ button.day { cursor: pointer; background: var(--md-sys-color-surface-container-h
     <div class="brand">MaterialVUE</div>
     <button class="nav-item selected" data-tool="gradebook"><md-ripple></md-ripple><md-icon>grading</md-icon>Gradebook</button>
     <button class="nav-item" data-tool="attendance"><md-ripple></md-ripple><md-icon>event_available</md-icon>Attendance</button>
+    <button class="nav-item" data-tool="schedule"><md-ripple></md-ripple><md-icon>schedule</md-icon>Class Schedules</button>
+    <button class="nav-item" data-tool="hallpass"><md-ripple></md-ripple><md-icon>directions_walk</md-icon>Hall Pass</button>
     <div class="spacer"></div>
     <div class="me" id="me" hidden>
       <div class="photo" id="photo"><md-icon>person</md-icon></div>
       <div class="muted"><b id="hello"></b><span id="school"></span></div>
     </div>
+    <button class="nav-item" data-tool="settings"><md-ripple></md-ripple><md-icon>settings</md-icon>Settings</button>
     <button class="nav-item" id="signout"><md-ripple></md-ripple><md-icon>logout</md-icon>Sign out</button>
   </nav>
   <main>
@@ -204,10 +293,10 @@ let sid = sessionStorage.getItem('mv_sid'); // shortcut: sessionStorage survives
 const show = (which) => { $('#login').hidden = which !== 'login'; $('#app').hidden = which !== 'app'; };
 const loginErr = (m) => { $('#err').textContent = m || ''; $('#err').hidden = !m; };
 
-async function api(path, body) {
+async function api(path, body, bg) {
   const r = await fetch(path, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...(sid && { Authorization: 'Bearer ' + sid }) },
+    headers: { 'Content-Type': 'application/json', ...(sid && { Authorization: 'Bearer ' + sid }), ...(bg && { 'X-MV-Bg': '1' }) }, // bg = the page's own polling, not user activity
     body: JSON.stringify(body || {}),
   });
   const j = await r.json().catch(() => ({ error: 'Bad response from server' }));
@@ -217,19 +306,26 @@ async function api(path, body) {
 }
 
 // StudentVUE answers HTTP 200 even on failure; the real error is in the envelope.
-async function sv(method, inner) {
-  const j = await api('/api/' + method, inner);
+async function sv(method, inner, bg) {
+  const j = await api('/api/' + method, inner, bg);
   if (j.error) { const e = new Error(j.error.message || 'StudentVUE error'); e.code = String(j.error.code); throw e; }
   return j.data;
 }
 
 async function signOut(msg) {
+  hpStopAll();
   const old = sid;
   sid = null;
   sessionStorage.removeItem('mv_sid');
+  sessionStorage.removeItem('mv_hp_last');
   if (old) fetch('/logout', { method: 'POST', headers: { Authorization: 'Bearer ' + old } }).catch(() => {});
+  Object.assign(HP, { pass: null, info: {}, key: '', rooms: [], ended: new Set(), seen: new Map(), wasLive: false });
+  $('#content').replaceChildren(); $('#periods').replaceChildren(); // don't leave grades sitting in the hidden page
+  $('#hello').textContent = ''; $('#school').textContent = ''; $('#me').hidden = true;
+  $('#photo').replaceChildren(h('md-icon', {}, 'person'));
   show('login');
   loginErr(msg);
+  loadRemembered();
 }
 
 $('#form').addEventListener('submit', async (e) => {
@@ -239,7 +335,7 @@ $('#form').addEventListener('submit', async (e) => {
     const raw = $('#url').value.trim();
     district = new URL(raw.includes('://') ? raw : 'https://' + raw).hostname.toLowerCase();
   } catch { return loginErr('Enter a valid StudentVUE URL.'); }
-  const body = { district, username: $('#user').value.trim(), password: $('#pass').value };
+  const body = { district, username: $('#user').value.trim(), password: $('#pass').value, remember: $('#remember').checked };
   if (!body.username || !body.password) return loginErr('Enter your username and password.');
   const zipShown = !$('#zipwrap').hidden;
   if (zipShown) body.zip = $('#zip').value.trim();
@@ -264,12 +360,16 @@ $('#form').addEventListener('submit', async (e) => {
 
 $('#signout').addEventListener('click', () => signOut(''));
 let tool = 'gradebook';
-const reload = () => (tool === 'attendance' ? loadAttendance() : loadGradebook($('#periods md-outlined-select')?.value ?? ''));
+const TITLES = { gradebook: 'Gradebook', attendance: 'Attendance', schedule: 'Class Schedules', hallpass: 'Hall Pass', settings: 'Settings' };
+const reload = () => (tool === 'settings' ? renderSettings() : tool === 'attendance' ? loadAttendance() : tool === 'schedule' ? loadSchedule(true) : tool === 'hallpass' ? loadHallPass() : loadGradebook($('#periods md-outlined-select')?.value ?? ''));
 function openTool(t) {
   tool = t;
   document.querySelectorAll('.nav-item[data-tool]').forEach((b) => b.classList.toggle('selected', b.dataset.tool === t));
-  $('#title').textContent = t === 'attendance' ? 'Attendance' : 'Gradebook';
-  $('#content').className = t === 'attendance' ? 'list' : '';
+  $('#title').textContent = TITLES[t] || 'Gradebook';
+  const mid = t === 'schedule' || t === 'hallpass' || t === 'settings';
+  $('#content').className = t === 'attendance' ? 'list' : mid ? 'list center' : '';
+  $('main').classList.toggle('centered', mid);
+  $('#refresh').hidden = t === 'settings';
   $('#periods').replaceChildren();
   reload();
 }
@@ -278,6 +378,11 @@ $('#refresh').addEventListener('click', reload);
 
 function enter() {
   show('app');
+  lastAct = Date.now(); lastPing = Date.now();
+  applyNavOrder();
+  hpStart();
+  refreshHP().catch(() => {}); // notices a pass that already exists, so the inactivity timer knows about it
+  loadRemembered();
   sv('GetChildListData', { legacyAppRequest: false, secondaryLogin: false })
     .then((d) => {
       const c = d?.children?.childrenList?.[0]; // real field names, taken from a live response (the API doc's childInfos/name don't exist)
@@ -294,7 +399,7 @@ function enter() {
     const b64 = find(d?.studentInfoXML) || find(d);
     if (b64 && /^[A-Za-z0-9+/=\s]+$/.test(b64)) $('#photo').replaceChildren(h('img', { src: `data:image/${b64.startsWith('/9j') ? 'jpeg' : 'png'};base64,` + b64, alt: '' }));
   }).catch(() => {}); // no photo there: the one from the child list stays
-  openTool('gradebook');
+  openTool(CFG.order[0]);
 }
 
 /* ---------- gradebook ---------- */
@@ -468,7 +573,552 @@ async function loadAttendance() {
   } finally { $('#bar').hidden = true; }
 }
 
-if (sid) enter(); else show('login');
+/* ---------- class schedules ---------- */
+let sch = null, schTerm = null, schPeriods = new Set(); // sch = { terms[] }; schPeriods empty = all periods
+const parseDate = (s) => { const m = /(\d+)\/(\d+)\/(\d+)/.exec(s || ''); return m ? new Date(+m[3], m[1] - 1, +m[2]) : null; };
+const perNum = (p) => { const n = parseFloat(p); return isNaN(n) ? Infinity : n; };
+const byPeriod = (a, b) => perNum(a) - perNum(b) || String(a).localeCompare(String(b));
+
+function termsOf(d) {
+  const all = d?.studentClassScheduleForAllTerms;
+  if (all?.studentClassScheduleForTerms?.length) {
+    const info = new Map((all.termLists || []).map((t) => [String(t.termIndex), t]));
+    return all.studentClassScheduleForTerms.map((t, i) => {
+      const n = info.get(String(t.thisTermIndex)) || {};
+      return { index: String(t.thisTermIndex ?? i), name: n.termName || t.thisTermIndexName || 'Term ' + (i + 1),
+        begin: parseDate(t.beginDate || n.beginDate), end: parseDate(t.endDate || n.endDate), classes: t.classLists || [] };
+    });
+  }
+  const one = d?.studentClassSchedule; // single-term shape
+  return one?.classLists ? [{ index: '0', name: one.termIndexName || 'Current term', begin: null, end: null, classes: one.classLists }] : [];
+}
+
+async function loadSchedule(force) {
+  if (force || !sch) {
+    $('#bar').hidden = false;
+    loading('class schedule');
+    try {
+      const d = await sv('StudentClassList', { childIntID: 0, loadAllTerms: true, conSchOrgYearGU: '', conSchTermIndex: '-1', termIndex: '-1' });
+      if (tool !== 'schedule') return;
+      const terms = termsOf(d);
+      if (!terms.length) { $('#periods').replaceChildren(); return message('No class schedule found.'); }
+      const now = new Date();
+      const inTerm = terms.find((t) => t.begin && t.end && now >= t.begin && now <= new Date(t.end.getTime() + 864e5 - 1));
+      const api = String(d.studentClassScheduleForAllTerms?.termIndex ?? '');
+      sch = { terms };
+      schPeriods = new Set();
+      schTerm = (inTerm || terms.find((t) => t.index === api) || terms[0]).index;
+    } catch (e) {
+      if (e.message === 'expired' || tool !== 'schedule') return;
+      message(e.code === '2100' ? "Class schedules aren't available for this school." : e.message, 'error');
+      return;
+    } finally { $('#bar').hidden = true; }
+  }
+  showSchedule();
+}
+
+function showSchedule() {
+  const t = sch.terms.find((x) => x.index === schTerm) || sch.terms[0];
+  $('#periods').replaceChildren(
+    h('md-outlined-select', { label: 'Quarter / term', onchange: (e) => { schTerm = e.target.value; schPeriods = new Set(); showSchedule(); } },
+      ...sch.terms.map((x) => h('md-select-option', { value: x.index, selected: x.index === t.index }, h('div', { slot: 'headline' }, x.name)))));
+  renderSchedule(t);
+}
+
+function renderSchedule(t) {
+  const classes = t.classes.filter((c) => !c.excludePVUE);
+  const all = [...new Set(classes.map((c) => String(c.period ?? '')))].sort(byPeriod);
+  const chip = (label, on, fn) => h('button', { class: 'pchip', 'aria-pressed': String(on), onclick: fn }, label);
+  const toggle = (p) => { schPeriods.has(p) ? schPeriods.delete(p) : schPeriods.add(p); renderSchedule(t); };
+  const rows = classes.filter((c) => !schPeriods.size || schPeriods.has(String(c.period ?? ''))).sort((a, b) => byPeriod(a.period, b.period));
+  $('#content').replaceChildren(h('div', {},
+    h('div', { class: 'pf' },
+      chip('All', !schPeriods.size, () => { schPeriods = new Set(); renderSchedule(t); }),
+      ...all.map((p) => chip(p || '?', schPeriods.has(p), () => toggle(p)))),
+    rows.length ? h('div', { class: 'sched' }, ...rows.map((c) => h('div', { class: 'sched-row' },
+      h('div', { class: 'pnum', 'aria-label': 'Period ' + (c.period ?? '?') }, String(c.period ?? '?')),
+      h('div', {},
+        h('div', { class: 'sched-title' }, c.courseTitle || 'Class'),
+        h('div', { class: 'sched-sub' }, [c.teacher, typeof c.meetingDays === 'string' && c.meetingDays].filter(Boolean).join(' · '))),
+      c.roomName ? h('div', { class: 'room' }, c.roomName) : null)))
+      : h('div', { class: 'msg' }, h('md-icon', {}, 'info'), 'No classes match the selected periods.')));
+}
+
+/* ---------- hall pass ---------- */
+// GROUNDED (seen in a real GetChildListData response): children.showStudentHallPass, children.hallPassCountUp, and per child
+//   studentHallPassGU, hallPassStatus, hallPassRequestDate / hallPassApproveDate / hallPassEndDate, hallPassMessageString,
+//   hallPassCountToday, hallPassRestrictData { hallPassDisabled, hasLimitDefined, passLimit }.  That is what drives the card and the auto-update.
+// UNVERIFIED (the API doc lists only method names): GetHallPassSetup's room list, GetHallPassData's destination/minutes, and UpdateHallPass's
+// request fields. Those are read tolerantly / sent as a superset. Run the backend with --log-raw once and the exact names can be pinned down.
+const HP = { setup: null, rooms: [], maxMin: null, sel: { room: '', minutes: '' }, pass: null, info: {}, flags: {}, name: '', today: 0, restrict: {},
+  allowEnd: false, setupCountUp: false, err: '', busy: false, key: '', loaded: false, poll: null, tick: null, ended: new Set(), seen: new Map(), rawSetup: null };
+const MIN_OPTIONS = [2, 3, 4, 5, 10, 15, 20, 30, 45, 60];
+
+function parseDT(s) {
+  if (!s || typeof s !== 'string') return null;
+  const t = Date.parse(s);
+  if (!isNaN(t) && /\d{4}-\d{2}-\d{2}/.test(s)) return t;
+  const m = /(\d+)\/(\d+)\/(\d+)[ T,]+(\d+):(\d+)(?::(\d+))?\s*([AaPp][Mm])?/.exec(s);
+  if (m) {
+    let hr = +m[4];
+    if (m[7]) hr = (hr % 12) + (/p/i.test(m[7]) ? 12 : 0);
+    return new Date(+m[3], m[1] - 1, +m[2], hr, +m[5], +(m[6] || 0)).getTime();
+  }
+  return isNaN(t) ? null : t;
+}
+
+function statusKind(raw, approve) {
+  const t = String(raw || '').toLowerCase().trim();
+  if (!t) return 'none';
+  if (/\b(end|complet|return|cancel|expir|deni|reject|done|clos|void)/.test(t)) return 'ended'; // word starts only: "Pending" contains "end"
+  if (/\b(pend|request|wait|await|submit)/.test(t)) return 'pending';
+  if (/\b(activ|approv|out|progress|current|issued|gone|start)/.test(t)) return 'active';
+  return approve ? 'active' : 'pending'; // unknown wording: an approve date means somebody approved it
+}
+
+const scan = (v, re, test, skipArr = false, d = 0) => { // first scalar under a key matching re (depth-first)
+  if (!v || typeof v !== 'object' || d > 8 || (skipArr && Array.isArray(v))) return null;
+  for (const [k, x] of Object.entries(v)) if (re.test(k) && x != null && typeof x !== 'object' && test(x)) return x;
+  for (const x of Object.values(v)) { const r = scan(x, re, test, skipArr, d + 1); if (r != null) return r; }
+  return null;
+};
+
+function findRooms(v) {
+  // Real setup shape (from a log): hallPassRoomSetupXML = { hallPassMaxDaysForFuturePass, hallPassCountUp, allowStudentsToEndHallPass, hallPassRoomTypes: [] }.
+  // Element fields of hallPassRoomTypes are unseen (the list was empty), so names are matched loosely, and only arrays whose path says room/type/destination/location count.
+  const PRIMARY = /^(name|room|destination|location|description|title|text)$|(room|destination|location|type).*(name|desc)/i;
+  let best = { score: -1, list: [] };
+  const walk = (x, path, d) => {
+    if (!x || typeof x !== 'object' || d > 8) return;
+    if (Array.isArray(x) && x.length && /room|destination|location|type/i.test(path) && x.every((o) => o && typeof o === 'object' && !Array.isArray(o))) {
+      const rows = x.map((o) => {
+        const ok = (k) => typeof o[k] === 'string' && o[k].trim();
+        const keys = Object.keys(o);
+        const nk = keys.find((k) => PRIMARY.test(k) && ok(k)) || keys.find((k) => /name$/i.test(k) && ok(k));
+        const gk = keys.find((k) => /(gu|id)$/i.test(k) && ok(k));
+        const mk = keys.find((k) => /(max.*(min|time)|time.?limit|minutes)/i.test(k) && Number(o[k]) > 0);
+        return nk ? { name: o[nk].trim(), gu: gk ? o[gk] : '', max: mk ? Number(o[mk]) : null } : null;
+      });
+      if (rows.every(Boolean) && rows.length > best.score) best = { score: rows.length, list: rows };
+    }
+    for (const [k, y] of Object.entries(x)) walk(y, path + '.' + k, d + 1);
+  };
+  walk(v, '', 0);
+  const seen = new Set();
+  return best.list.filter((r) => !seen.has(r.name) && seen.add(r.name));
+}
+
+// One place to fix once a log shows the real names. Sent as a superset: the server ignores fields it doesn't know.
+const hpBody = (kind, c) => ({
+  childIntID: 0, studentHallPassGU: c.gu || '', action: kind, passAction: kind, hallPassAction: kind,
+  roomGU: c.room?.gu || '', hallPassRoomGU: c.room?.gu || '', destinationGU: c.room?.gu || '', roomName: c.room?.name || '',
+  minutes: c.minutes ?? null, timeLimit: c.minutes ?? null, duration: c.minutes ?? null,
+});
+
+// One poll + one 1 s tick for the whole session, on every tool: a live pass keeps updating (and keeps you signed in) wherever you are.
+// Polls are marked background, so only a real hall pass (never the polling itself) exempts the session from the idle logout.
+function hpStopAll() { clearInterval(HP.poll); clearInterval(HP.tick); HP.poll = HP.tick = null; }
+function hpStart() {
+  hpStopAll();
+  HP.tick = setInterval(hpTick, 1000);
+  HP.poll = setInterval(() => { if (sid && !document.hidden && (tool === 'hallpass' || HP.pass)) refreshHP().catch(() => {}); }, 3000);
+}
+
+async function refreshHP() {
+  const d = await sv('GetChildListData', { legacyAppRequest: false, secondaryLogin: false }, true); // the shape that is verified
+  const ch = d?.children, c = ch?.childrenList?.[0] || {};
+  HP.flags = { enabled: ch?.showStudentHallPass !== false, countUp: !!ch?.hallPassCountUp };
+  HP.name = c.childName || c.childFirstName || '';
+  HP.today = Number(c.hallPassCountToday) || 0;
+  HP.restrict = c.hallPassRestrictData || {};
+  const kind = statusKind(c.hallPassStatus, c.hallPassApproveDate);
+  const gu = c.studentHallPassGU || '';
+  if (gu && !HP.ended.has(gu) && (kind === 'pending' || kind === 'active')) {
+    if (kind === 'active' && !HP.seen.has(gu)) HP.seen.set(gu, Date.now());
+    if (!HP.pass || HP.pass.gu !== gu) { // new pass: look up where it goes and for how long
+      let last = {}; try { last = JSON.parse(sessionStorage.getItem('mv_hp_last') || '{}'); } catch { /* none */ }
+      HP.info = { room: last.room || '', minutes: last.minutes || null };
+      sv('GetHallPassData', { childIntID: 0, getOnlyScheduedPases: false }, true).then((dd) => {
+        const x = dd?.studentHallPassXML;
+        const room = scan(x, /(^|_)(room|destination|location)(_?name)?$|^to$/i, (v) => typeof v === 'string' && v.trim());
+        const mins = scan(x, /(time.?limit|minutes|duration|allowed|max.?time)/i, (v) => Number(v) > 0);
+        if (room) HP.info.room = String(room).trim();
+        if (mins) HP.info.minutes = Number(mins);
+        renderHP(true);
+      }).catch(() => {}); // keep the session's own values
+    }
+    HP.pass = { gu, kind, message: c.hallPassMessageString || '', request: c.hallPassRequestDate, approve: c.hallPassApproveDate, end: c.hallPassEndDate };
+  } else HP.pass = null;
+  if (HP.wasLive && !HP.pass) lastAct = Date.now(); // pass over: the 5 minute inactivity clock starts now
+  HP.wasLive = !!HP.pass;
+  renderHP();
+}
+
+function timing(p) {
+  const approve = parseDT(p.approve), end = parseDT(p.end), mins = HP.info.minutes;
+  const from = approve ? Math.min(approve, Date.now()) : (HP.seen.get(p.gu) || null); // approval time already elapsed is deducted from the timer
+  const endAt = end || (mins && from ? from + mins * 60000 : null);
+  const total = mins ? mins * 60000 : endAt && from ? endAt - from : null;
+  return { endAt, total, from };
+}
+
+const pad2 = (n) => String(n).padStart(2, '0');
+const mmss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(s / 60)}:${pad2(s % 60)}`; };
+const R = 64, CIRC = 2 * Math.PI * R;
+
+function hpTick() {
+  const p = HP.pass;
+  if (!p || p.kind !== 'active') return;
+  const t = timing(p);
+  if (!t.endAt) return;
+  const left = t.endAt - Date.now(), ring = $('#hp-bar'), txt = $('#hp-time');
+  if (ring && txt) { // only exists while the Hall Pass page is open
+    const frac = t.total ? Math.min(Math.max(left / t.total, 0), 1) : 0;
+    ring.style.strokeDashoffset = String(CIRC * (1 - frac));
+    ring.classList.toggle('low', left <= 60000);
+    txt.textContent = HP.flags.countUp && t.total ? mmss(t.total - left) : mmss(left);
+  }
+  if (left <= 0 && !HP.ended.has(p.gu)) { // time is up: end the pass, on whatever page you are
+    HP.ended.add(p.gu);
+    if (HP.allowEnd) endPass('End', true); // tell StudentVUE where the school lets students
+    else { HP.pass = null; HP.wasLive = false; lastAct = Date.now(); sessionStorage.removeItem('mv_hp_last'); renderHP(true); } // otherwise close it here
+  }
+}
+
+async function endPass(kind, auto) {
+  const p = HP.pass;
+  if (!p || HP.busy) return;
+  HP.busy = true; HP.err = '';
+  const x = $('#hp-x'); if (x) x.disabled = true;
+  try {
+    await sv('UpdateHallPass', hpBody(kind, { gu: p.gu, room: { name: HP.info.room }, minutes: HP.info.minutes }));
+    sessionStorage.removeItem('mv_hp_last');
+  } catch (e) {
+    if (e.message === 'expired') return;
+    HP.err = (auto ? 'Time is up, but StudentVUE did not end the pass: ' : 'Could not end the pass: ') + e.message;
+  } finally { HP.busy = false; }
+  try { await refreshHP(); } catch { /* next poll */ }
+  renderHP(true);
+}
+
+async function requestPass() {
+  const room = HP.rooms[+HP.sel.room], minutes = Number(HP.sel.minutes) || null;
+  if (!room || !minutes || HP.busy) return;
+  HP.busy = true; HP.err = '';
+  renderHP(true);
+  try {
+    await sv('UpdateHallPass', hpBody('Request', { room, minutes }));
+    sessionStorage.setItem('mv_hp_last', JSON.stringify({ room: room.name, minutes }));
+  } catch (e) {
+    if (e.message === 'expired') return;
+    HP.err = e.code === '2100' ? "Hall passes aren't available right now." : 'Could not request the pass: ' + e.message;
+  } finally { HP.busy = false; }
+  try { await refreshHP(); } catch { /* next poll */ }
+  renderHP(true);
+  for (const ms of [2000, 5000]) setTimeout(() => { if (tool === 'hallpass') refreshHP().catch(() => {}); }, ms); // catch quick approvals
+}
+
+function hpSelect(label, opts, cur, onchange) {
+  return h('md-outlined-select', { label, onchange: (e) => onchange(e.target.value) },
+    ...opts.map(([v, text]) => h('md-select-option', { value: String(v), selected: String(v) === String(cur) }, h('div', { slot: 'headline' }, text))));
+}
+
+function ringSvg(p) {
+  const NS = 'http://www.w3.org/2000/svg', mk = (n, a) => { const e = document.createElementNS(NS, n); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); return e; };
+  const svg = mk('svg', { viewBox: '0 0 148 148', 'aria-hidden': 'true' });
+  svg.append(mk('circle', { class: 'track', cx: 74, cy: 74, r: R }),
+    mk('circle', { id: 'hp-bar', class: 'bar', cx: 74, cy: 74, r: R, 'stroke-dasharray': CIRC, 'stroke-dashoffset': p.kind === 'active' ? 0 : CIRC }));
+  return svg;
+}
+
+function renderHP(force) {
+  if (tool !== 'hallpass') return;
+  const p = HP.pass;
+  const key = JSON.stringify([HP.flags, HP.rooms.length, HP.name, p && [p.gu, p.kind, p.message, p.end], HP.info, HP.err, HP.busy, HP.restrict, HP.today, HP.allowEnd]);
+  if (!force && key === HP.key) return; // nothing changed: don't rebuild (keeps dropdown choices intact)
+  HP.key = key;
+  const errBox = HP.err ? h('div', { class: 'msg hp-err' }, h('md-icon', {}, 'error'), HP.err) : null;
+
+  if (!HP.flags.enabled) return void $('#content').replaceChildren(h('div', { class: 'msg' }, h('md-icon', {}, 'info'), "Hall passes aren't enabled for this school."));
+
+  if (p) {
+    const t = timing(p), mins = HP.info.minutes;
+    const ring = h('div', { class: 'hp-ring' }, ringSvg(p),
+      h('div', { class: 'hp-center' },
+        p.kind === 'active' ? [h('b', { id: 'hp-time' }, t.endAt ? mmss(t.endAt - Date.now()) : '—'), h('small', {}, HP.flags.countUp ? 'elapsed' : 'left')]
+          : [h('md-icon', { style: '--md-icon-size: 36px; margin: 0 auto' }, 'hourglass_top'), h('small', {}, 'waiting')]),
+      p.kind === 'pending' || HP.allowEnd // the school decides: with allowStudentsToEndHallPass false only the request can be withdrawn
+        ? h('button', { class: 'hp-x', id: 'hp-x', 'aria-label': p.kind === 'pending' ? 'Cancel request' : 'End hall pass', title: p.kind === 'pending' ? 'Cancel request' : 'End hall pass',
+          disabled: HP.busy, onclick: () => endPass(p.kind === 'pending' ? 'Cancel' : 'End', false) }, h('md-icon', {}, 'close'))
+        : null);
+    $('#content').replaceChildren(h('div', {},
+      h('div', { class: 'hp-card' },
+        h('div', {},
+          h('span', { class: 'st st-' + p.kind }, p.kind === 'active' ? 'Approved by teacher' : 'Waiting for teacher'),
+          h('div', { class: 'hp-name' }, HP.name || 'Student'),
+          h('div', { class: 'hp-line' }, h('md-icon', {}, 'place'), HP.info.room ? 'Going to ' + HP.info.room : 'Destination not provided'),
+          h('div', { class: 'hp-line' }, h('md-icon', {}, 'timer'), mins ? `${mins} minute${mins === 1 ? '' : 's'}` : 'Time not provided'),
+          h('div', { class: 'hp-line' }, h('md-icon', {}, p.kind === 'active' ? 'check_circle' : 'hourglass_top'), p.kind === 'active' ? 'Teacher approved' : 'Teacher has not approved yet')),
+        ring),
+      p.message ? h('div', { class: 'hp-note' }, p.message) : null,
+      p.kind === 'pending' ? h('div', { class: 'hp-note' }, 'Waiting for approval. This updates on its own. The timer starts when your teacher approves.') : null,
+      p.kind === 'active' && !HP.allowEnd ? h('div', { class: 'hp-note' }, "Your school doesn't let students end hall passes. Head back when the timer runs out; the pass closes on its own.") : null,
+      errBox));
+    hpTick();
+    return;
+  }
+
+  // no pass: request form
+  const r = HP.restrict, limit = Number(r.passLimit), hasLimit = r.hasLimitDefined && limit >= 0;
+  const blocked = r.hallPassDisabled ? 'Hall passes are turned off for you right now.' : hasLimit && HP.today >= limit ? `You've used all ${limit} of your hall passes for today.` : '';
+  const room = HP.rooms[+HP.sel.room];
+  const cap = room?.max || HP.maxMin;
+  const opts = MIN_OPTIONS.filter((m) => !cap || m <= cap);
+  if (!opts.includes(Number(HP.sel.minutes))) HP.sel.minutes = String(opts.includes(10) ? 10 : opts[0] ?? 10);
+  const form = HP.rooms.length
+    ? h('div', { class: 'hp-form' },
+      h('h3', {}, 'Request a hall pass'),
+      hpSelect('Where are you going?', HP.rooms.map((x, i) => [i, x.name]), HP.sel.room, (v) => { HP.sel.room = v; renderHP(true); }),
+      hpSelect('How long?', opts.map((m) => [m, `${m} minutes`]), HP.sel.minutes, (v) => { HP.sel.minutes = v; }),
+      hasLimit ? h('div', { class: 'row-sub' }, `${HP.today} of ${limit} passes used today`) : null,
+      h('md-filled-button', { disabled: HP.busy || !!blocked || !room, onclick: requestPass }, HP.busy ? 'Requesting…' : 'Request pass'))
+    : h('div', {}, h('div', { class: 'msg' }, h('md-icon', {}, 'info'), "StudentVUE didn't list any hall pass destinations for your account, so there's nothing to request yet."),
+      HP.rawSetup ? h('details', { class: 'raw' }, h('summary', {}, 'Show what StudentVUE returned (may include personal info)'), h('pre', {}, HP.rawSetup)) : null);
+  $('#content').replaceChildren(h('div', {}, blocked ? h('div', { class: 'msg', style: 'margin-bottom:12px' }, h('md-icon', {}, 'block'), blocked) : null, form, errBox));
+}
+
+async function loadHallPass() {
+  $('#periods').replaceChildren();
+  $('#bar').hidden = false;
+  loading('hall pass');
+  HP.key = ''; HP.err = ''; HP.rooms = []; HP.rawSetup = null;
+  try {
+    await refreshHP();
+    if (tool !== 'hallpass') return;
+    if (HP.flags.enabled) {
+      try {
+        const sd = await sv('GetHallPassSetup', { childIntID: 0 });
+        const su = sd?.hallPassRoomSetupXML || {};
+        HP.allowEnd = su.allowStudentsToEndHallPass === true || su.allowStudentsToEndHallPass === 'true'; // school setting: students may not end passes unless true
+        HP.setupCountUp = su.hallPassCountUp === true;
+        HP.flags.countUp = HP.flags.countUp || HP.setupCountUp;
+        HP.rooms = findRooms(su);
+        const mm = scan(su, /(max.*(min|time)|time.?limit)/i, (v) => Number(v) > 0, true); // outside the room list only
+        HP.maxMin = mm ? Number(mm) : null;
+        let probe = null;
+        if (!HP.rooms.length) { // empty on the setup call: see whether the pass-data call lists destinations
+          try { probe = await sv('GetHallPassData', { childIntID: 0, getOnlyScheduedPases: false }); HP.rooms = findRooms(probe); } catch (e) { if (e.message === 'expired') return; }
+        }
+        if (!HP.rooms.length) { try { HP.rawSetup = JSON.stringify({ GetHallPassSetup: sd, GetHallPassData: probe }, null, 2).slice(0, 6000); } catch { /* ignore */ } }
+        HP.sel.room = HP.sel.room && HP.rooms[+HP.sel.room] ? HP.sel.room : '0';
+      } catch (e) { if (e.message === 'expired') return; HP.err = e.code === '2100' ? '' : 'Could not load rooms: ' + e.message; }
+    }
+    renderHP(true);
+  } catch (e) {
+    if (e.message === 'expired' || tool !== 'hallpass') return;
+    message(e.message, 'error');
+  } finally { $('#bar').hidden = true; }
+}
+
+/* ---------- logging notice ---------- */
+// The backend reports its logging mode on /health. Raw = red, can't be closed. Redacted = yellow, can be closed (per tab). Off = no bar.
+const NOTICES = {
+  raw: { icon: 'warning', close: false, text: 'The backend for this MaterialVUE host is running logs with raw data possibly containing personal information such as names, schools, etc. This is mainly used for development purposes. If you\'re not a developer or the host, please use your district\'s/school\'s official StudentVUE site until the backend is no longer running logs.' },
+  redacted: { icon: 'info', close: true, text: 'The backend for this MaterialVUE host is running logs, but censoring personal information such as names, schools, etc. This is mainly used for development purposes. It is recommended to use your district\'s/school\'s official StudentVUE site until the backend is no longer running logs, however.' },
+};
+const noticeEl = $('#notice');
+const syncBanner = () => document.documentElement.style.setProperty('--banner-h', noticeEl.hidden ? '0px' : noticeEl.offsetHeight + 'px');
+new ResizeObserver(syncBanner).observe(noticeEl);
+async function checkLogging() {
+  let mode = 'off';
+  try {
+    const r = await fetch('/health', { cache: 'no-store' });
+    const j = await r.json();
+    if (j && typeof j.logging === 'string') mode = j.logging;
+  } catch { /* backend unreachable or an older one without the field: show nothing */ }
+  const n = NOTICES[mode];
+  if (!n || (n.close && sessionStorage.getItem('mv_notice') === mode)) {
+    noticeEl.hidden = true; noticeEl.dataset.mode = ''; noticeEl.replaceChildren(); return syncBanner();
+  }
+  if (noticeEl.dataset.mode !== mode) {
+    noticeEl.dataset.mode = mode;
+    noticeEl.className = mode === 'raw' ? 'raw' : 'redacted';
+    noticeEl.setAttribute('role', mode === 'raw' ? 'alert' : 'status');
+    noticeEl.replaceChildren(
+      h('md-icon', {}, n.icon),
+      h('div', { class: 'ntext' }, n.text),
+      n.close ? h('button', { class: 'nclose', 'aria-label': 'Dismiss', onclick() { sessionStorage.setItem('mv_notice', mode); checkLogging(); } }, h('md-icon', {}, 'close')) : null);
+  }
+  noticeEl.hidden = false;
+  syncBanner();
+}
+checkLogging();
+setInterval(checkLogging, 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) checkLogging(); });
+
+/* ---------- remembered login ---------- */
+// The saved login lives in an encrypted HttpOnly cookie the page can't read. All the page learns is who it is, to label the button.
+let REM = null;
+async function loadRemembered() {
+  try {
+    const j = await (await fetch('/remembered', { cache: 'no-store' })).json();
+    REM = j && j.remembered ? j : null;
+  } catch { REM = null; }
+  renderResume();
+  if (!$('#app').hidden && tool === 'settings') renderSettings();
+}
+function renderResume() {
+  const w = $('#resume-wrap');
+  if (!REM || sid) { w.hidden = true; return; }
+  $('#resume').textContent = 'Or continue as ' + (REM.name || REM.username);
+  if (!$('#url').value) $('#url').value = REM.district || '';
+  if (!$('#user').value) $('#user').value = REM.username || '';
+  w.hidden = false;
+}
+async function forgetDevice() {
+  await fetch('/forget', { method: 'POST' }).catch(() => {});
+  REM = null;
+  renderResume();
+  if (!$('#app').hidden && tool === 'settings') renderSettings();
+}
+$('#forget-login').addEventListener('click', forgetDevice);
+$('#resume').addEventListener('click', async () => {
+  $('#resume').disabled = true;
+  loginErr('');
+  try {
+    sid = null;
+    const j = await api('/resume');
+    sid = j.session;
+    sessionStorage.setItem('mv_sid', sid);
+    enter();
+  } catch (err) {
+    if (err.message === 'saved login invalid') { REM = null; renderResume(); loginErr('Your saved login no longer works. Please sign in again.'); }
+    else loginErr(err.message);
+  } finally { $('#resume').disabled = false; }
+});
+
+/* ---------- inactivity: 5 minutes, unless a hall pass is in session ---------- */
+const IDLE_MS = 5 * 60 * 1000;
+let lastAct = Date.now(), lastPing = 0;
+const userActive = () => {
+  const now = Date.now();
+  lastAct = now;
+  if (sid && now - lastPing > 60000) { lastPing = now; api('/ping').catch(() => {}); } // tells the server the person is still here
+};
+for (const ev of ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart', 'scroll']) addEventListener(ev, userActive, { passive: true, capture: true });
+setInterval(() => { if (sid && !HP.pass && Date.now() - lastAct > IDLE_MS) signOut('You were signed out after 5 minutes of inactivity.'); }, 5000);
+
+/* ---------- settings: Material You colors, light / dark / OLED, menu order ---------- */
+const TOOLS = ['gradebook', 'attendance', 'schedule', 'hallpass'];
+const TOOL_META = { gradebook: ['grading', 'Gradebook'], attendance: ['event_available', 'Attendance'], schedule: ['schedule', 'Class Schedules'], hallpass: ['directions_walk', 'Hall Pass'] };
+const MODES = [['system', 'System'], ['light', 'Light'], ['dark', 'Dark'], ['oled', 'OLED']];
+const DEFAULT_ACCENT = '#6750A4';
+const ACCENTS = [['Purple', '#6750A4'], ['Blue', '#0B57D0'], ['Teal', '#006A6A'], ['Green', '#146C2E'], ['Amber', '#B26A00'], ['Red', '#BA1A1A'], ['Rose', '#984061']];
+
+function loadCfg() {
+  let c = {};
+  try { c = JSON.parse(localStorage.getItem('mv_cfg') || '{}') || {}; } catch { /* defaults */ }
+  const order = Array.isArray(c.order) ? c.order.filter((t, i, a) => TOOLS.includes(t) && a.indexOf(t) === i) : [];
+  for (const t of TOOLS) if (!order.includes(t)) order.push(t);
+  return {
+    mode: MODES.some((m) => m[0] === c.mode) ? c.mode : 'system',
+    accent: typeof c.accent === 'string' && /^#[0-9a-f]{6}$/i.test(c.accent) ? c.accent.toUpperCase() : DEFAULT_ACCENT,
+    order,
+  };
+}
+let CFG = loadCfg();
+const saveCfg = () => { try { localStorage.setItem('mv_cfg', JSON.stringify(CFG)); } catch { /* private mode: not saved */ } };
+
+// Google's own Material You color engine; loaded only when a non-default look is picked. If it can't load, the built-in palette stays.
+let mcuLoad = null;
+const loadMCU = () => (mcuLoad ||= import('https://esm.run/@material/material-color-utilities@0.3.0').catch(() => null));
+const mq = matchMedia('(prefers-color-scheme: dark)');
+let painted = [];
+function paint(vars) {
+  const st = document.documentElement.style;
+  painted.forEach((k) => st.removeProperty(k));
+  painted = Object.keys(vars);
+  for (const [k, v] of Object.entries(vars)) st.setProperty(k, v);
+}
+const TONES = {
+  light: { s: 98, dim: 87, bright: 98, lowest: 100, low: 96, c: 94, high: 92, highest: 90 },
+  dark: { s: 6, dim: 6, bright: 24, lowest: 4, low: 10, c: 12, high: 17, highest: 22 },
+  oled: { s: 0, dim: 0, bright: 12, lowest: 0, low: 3, c: 7, high: 11, highest: 15 },
+};
+async function applyTheme() {
+  const root = document.documentElement;
+  const dark = CFG.mode === 'dark' || CFG.mode === 'oled' || (CFG.mode === 'system' && mq.matches);
+  root.style.colorScheme = CFG.mode === 'system' ? 'light dark' : dark ? 'dark' : 'light';
+  if (CFG.mode === 'system' && CFG.accent === DEFAULT_ACCENT) return paint({}); // the stylesheet already is this look
+  const m = await loadMCU();
+  if (!m) return paint({});
+  const th = m.themeFromSourceColor(m.argbFromHex(CFG.accent));
+  const sc = dark ? th.schemes.dark : th.schemes.light, tn = TONES[CFG.mode === 'oled' ? 'oled' : dark ? 'dark' : 'light'];
+  const hx = (a) => m.hexFromArgb(a), T = (n) => hx(th.palettes.neutral.tone(n));
+  const v = {
+    primary: hx(sc.primary), 'on-primary': hx(sc.onPrimary), 'primary-container': hx(sc.primaryContainer), 'on-primary-container': hx(sc.onPrimaryContainer),
+    secondary: hx(sc.secondary), 'on-secondary': hx(sc.onSecondary), 'secondary-container': hx(sc.secondaryContainer), 'on-secondary-container': hx(sc.onSecondaryContainer),
+    tertiary: hx(sc.tertiary), 'on-tertiary': hx(sc.onTertiary), 'tertiary-container': hx(sc.tertiaryContainer), 'on-tertiary-container': hx(sc.onTertiaryContainer),
+    error: hx(sc.error), 'on-error': hx(sc.onError), 'error-container': hx(sc.errorContainer), 'on-error-container': hx(sc.onErrorContainer),
+    background: T(tn.s), surface: T(tn.s), 'on-surface': hx(sc.onSurface), 'on-surface-variant': hx(sc.onSurfaceVariant), 'surface-variant': hx(sc.surfaceVariant),
+    'surface-dim': T(tn.dim), 'surface-bright': T(tn.bright), 'surface-container-lowest': T(tn.lowest), 'surface-container-low': T(tn.low),
+    'surface-container': T(tn.c), 'surface-container-high': T(tn.high), 'surface-container-highest': T(tn.highest),
+    outline: hx(sc.outline), 'outline-variant': hx(sc.outlineVariant), 'surface-tint': hx(sc.primary),
+    'inverse-surface': hx(sc.inverseSurface), 'inverse-on-surface': hx(sc.inverseOnSurface), 'inverse-primary': hx(sc.inversePrimary),
+    shadow: '#000000', scrim: '#000000',
+  };
+  const css = Object.fromEntries(Object.entries(v).map(([k, x]) => ['--md-sys-color-' + k, x]));
+  Object.assign(css, dark
+    ? { '--ok': '#A8DAB5', '--ok-c': '#0F5223', '--warn': '#FFB74D', '--warn-c': '#5A4300', '--info': '#9ECAFF', '--info-c': '#00497A' }
+    : { '--ok': '#146C2E', '--ok-c': '#C4EED0', '--warn': '#B26A00', '--warn-c': '#FFDF9E', '--info': '#00629D', '--info-c': '#CFE5FF' });
+  paint(css);
+}
+mq.addEventListener('change', () => { if (CFG.mode === 'system') applyTheme(); });
+applyTheme();
+
+function applyNavOrder() {
+  const nav = $('nav'), sp = nav.querySelector('.spacer');
+  for (const t of CFG.order) { const b = nav.querySelector(`.nav-item[data-tool="${t}"]`); if (b) nav.insertBefore(b, sp); }
+}
+const setMode = (k) => { CFG.mode = k; saveCfg(); applyTheme(); renderSettings(); };
+const setAccent = (c, live) => { CFG.accent = c.toUpperCase(); saveCfg(); applyTheme(); if (!live) renderSettings(); };
+function moveTool(i, d) {
+  const o = CFG.order, j = i + d;
+  if (j < 0 || j >= o.length) return;
+  [o[i], o[j]] = [o[j], o[i]];
+  saveCfg(); applyNavOrder(); renderSettings();
+}
+function resetLook() { CFG = { mode: 'system', accent: DEFAULT_ACCENT, order: [...TOOLS] }; saveCfg(); applyTheme(); applyNavOrder(); renderSettings(); }
+
+function renderSettings() {
+  if (tool !== 'settings') return;
+  const preset = ACCENTS.some(([, c]) => c === CFG.accent);
+  $('#content').replaceChildren(h('div', { class: 'set-wrap' },
+    h('div', { class: 'set-card' }, h('h3', {}, 'Appearance'),
+      h('div', { class: 'section-title' }, 'Mode'),
+      h('div', { class: 'chiprow' }, ...MODES.map(([k, label]) => h('button', { class: 'pchip', type: 'button', 'aria-pressed': String(CFG.mode === k), onclick: () => setMode(k) }, label))),
+      h('div', { class: 'row-sub' }, 'OLED uses pure black backgrounds, which saves battery on OLED screens.'),
+      h('div', { class: 'section-title' }, 'Color'),
+      h('div', { class: 'swatches' },
+        ...ACCENTS.map(([name, c]) => h('button', { class: 'sw', type: 'button', title: name, 'aria-label': name, 'aria-pressed': String(CFG.accent === c), style: 'background:' + c, onclick: () => setAccent(c) },
+          CFG.accent === c ? h('md-icon', {}, 'check') : null)),
+        h('label', { class: 'sw custom', title: 'Custom color', 'aria-pressed': String(!preset) },
+          h('input', { type: 'color', value: CFG.accent, 'aria-label': 'Custom color', oninput: (e) => setAccent(e.target.value, true), onchange: (e) => setAccent(e.target.value) }),
+          h('md-icon', {}, preset ? 'palette' : 'check')))),
+    h('div', { class: 'set-card' }, h('h3', {}, 'Menu order'),
+      ...CFG.order.map((t, i) => h('div', { class: 'ord-row' },
+        h('md-icon', {}, TOOL_META[t][0]), h('span', { class: 'grow' }, TOOL_META[t][1]),
+        h('md-icon-button', { 'aria-label': 'Move ' + TOOL_META[t][1] + ' up', disabled: i === 0, onclick: () => moveTool(i, -1) }, h('md-icon', {}, 'arrow_upward')),
+        h('md-icon-button', { 'aria-label': 'Move ' + TOOL_META[t][1] + ' down', disabled: i === CFG.order.length - 1, onclick: () => moveTool(i, 1) }, h('md-icon', {}, 'arrow_downward'))))),
+    h('div', { class: 'set-card' }, h('h3', {}, 'This device'),
+      h('div', { class: 'row-sub' }, REM
+        ? `Saved login for ${REM.username} (${REM.district}), kept in an encrypted cookie. You'll see "Continue as ${REM.name || REM.username}" on the sign-in page.`
+        : 'No login is saved on this device.'),
+      REM ? h('md-outlined-button', { type: 'button', onclick: forgetDevice }, 'Forget this device') : null,
+      h('md-text-button', { type: 'button', onclick: resetLook }, 'Reset appearance and menu order'))));
+}
+
+if (sid) enter(); else { show('login'); loadRemembered(); }
 </script>
 </body>
 </html>
